@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Api;
 use App\Http\Requests\Api\UserRequest;
 use App\Http\Resources\Api\UserResource;
 use App\Jobs\Api\SaveLastTokenJob;
-use App\Models\Book;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;

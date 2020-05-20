@@ -30,7 +30,58 @@ Route::namespace('Api')->prefix('v1')->middleware('cors')->group(function () {
             //用户退出
             Route::get('/logout', 'UserController@logout')->name('users.logout');
         });
+
+        /*
+         * 圈子相关路由
+         * */
+        //圈子列表
+        Route::get('/groups', 'GroupsController@index')->name('groups.index');
+        Route::get('/groups/{id}', 'GroupsController@show')->name('groups.show');
+        //类型 地点 下的圈子
+        Route::get('/catearea/groups', 'GroupsController@cateareaIndex')->name('catearea.groups.index');
+        //圈子的类型列表
+        Route::get('/categorys/groups', 'GroupsController@categorysIndex')->name('groups.categorys');
+        //圈子的地区列表
+        Route::get('/areas/groups', 'GroupsController@areasIndex')->name('groups.areas');
+        //圈子下的用户列表
+        Route::get('/groups/user/{id}', 'GroupsController@groupuserIndex')->name('groups.user.index');
+        //某个用户下的圈子列表
+        Route::get('/user/groups/{id}', 'GroupsController@useridIndex')->name('userId.groups.index');
+
+
+        //圈子的动态列表
+        Route::get('/feeds/group/{id}', 'FeedsController@groupIndex')->name('feeds.group.index');
+
+        //用户的动态列表
+        Route::get('/feeds/user/{id}', 'FeedsController@userIndex')->name('feeds.user.index');
+
+        Route::middleware('api.refresh')->group(function () {
+            //登陆用户加入的圈子列表
+            Route::get('/user/groups', 'GroupsController@userIndex')->name('user.groups.index');
+            //新建圈子
+            Route::post('/groups', 'GroupsController@store')->name('groups.store');
+            //更新圈子
+            Route::put('/groups/{id}', 'GroupsController@update')->name('groups.update');
+            //删除
+            Route::delete('/groups/{id}', 'GroupsController@destroy')->name('groups.destroy');
+            //用户加入圈子
+            Route::post('/groupmembers', 'GroupMembersController@store')->name('groupmembers.index');
+            //用户退出圈子
+            Route::delete('/group/exit/{id}', 'GroupsController@groupExit')->name('group.exit');
+
+            //发布动态
+            Route::post('/feeds', 'FeedsController@store')->name('feeds.index');
+
+
+
+
+        });
+
+
+
+
     });
+
     Route::middleware('admin.guard')->group(function () {
         //管理员注册
         Route::post('/admins', 'AdminController@store')->name('admins.store');
@@ -47,4 +98,9 @@ Route::namespace('Api')->prefix('v1')->middleware('cors')->group(function () {
             Route::get('/admins/logout', 'AdminController@logout')->name('admins.logout');
         });
     });
+
+
+
+
+
 });
