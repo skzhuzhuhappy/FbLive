@@ -3,22 +3,17 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Requests\Api\GroupsRequest;
-use App\Http\Requests\Api\UserRequest;
-use App\Http\Resources\Api\AdminResource;
 use App\Http\Resources\Api\GroupCategoriesResource;
 use App\Http\Resources\Api\GroupsResource;
 use App\Http\Resources\Api\UserResource;
-use App\Jobs\Api\SaveLastTokenJob;
-use App\Models\Admin;
 use App\Models\Areas;
 use App\Models\GroupCategories;
 use App\Models\GroupMembers;
-use App\Models\groups;
+use App\Models\Groups;
 use App\Models\User;
 use App\Transformers\PostTransformer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Tymon\JWTAuth\Exceptions\TokenExpiredException;
 
 class GroupsController extends Controller
 {
@@ -103,6 +98,21 @@ class GroupsController extends Controller
     {
         //组装数据
         $result = $request->all();
+
+        if (!$request->file('img_head')->isValid()) {
+            return $this->failed('img_head 不存在',402);
+        }
+
+        if (!$request->file('img_top')->isValid()) {
+            return $this->failed('img_top 不存在',402);
+        }
+
+        $img_head_path = $request->img_head->store('images');
+        $img_top_path = $request->img_top->store('images');
+
+        $result['img_head'] = $img_head_path;
+        $result['img_top'] = $img_top_path;
+
         $user = Auth::user();
         $result['user_id'] = $user->getAuthIdentifier();
         $result['audit'] = 1;

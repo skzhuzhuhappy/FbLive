@@ -25,7 +25,9 @@ class Groups extends Model
         'mode',
         'summary',
         'notice',
-        'audit'
+        'audit',
+        'img_head',
+        'img_top'
     ];
 
     public function user()

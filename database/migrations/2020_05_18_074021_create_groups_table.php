@@ -19,6 +19,8 @@ class CreateGroupsTable extends Migration
             $table->integer('user_id')->unsigned()->comment('创建者 ID');
             $table->integer('category_id')->unsigned()->comment('分类id');
             $table->integer('area_id')->unsigned()->comment('地区id');
+            $table->string('img_head')->nullable()->default(null)->comment('圈子头像');
+            $table->string('img_top')->nullable()->default(null)->comment('圈子顶图');
             $table->string('location', 100)->nullable()->comment('位置');
             $table->string('longitude', 100)->nullable()->comment('经度');
             $table->string('latitude', 100)->nullable()->comment('纬度');
