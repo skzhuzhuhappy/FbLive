@@ -99,7 +99,7 @@ class GroupsController extends Controller
         //组装数据
         $result = $request->all();
 
-        if (!$request->file('img_head')->isValid()) {
+        /*if (!$request->file('img_head')->isValid()) {
             return $this->failed('img_head 不存在',402);
         }
 
@@ -111,7 +111,7 @@ class GroupsController extends Controller
         $img_top_path = $request->img_top->store('images');
 
         $result['img_head'] = $img_head_path;
-        $result['img_top'] = $img_top_path;
+        $result['img_top'] = $img_top_path;*/
 
         $user = Auth::user();
         $result['user_id'] = $user->getAuthIdentifier();
