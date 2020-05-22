@@ -19,6 +19,10 @@ Route::namespace('Api')->prefix('v1')->middleware('cors')->group(function () {
         Route::post('/users', 'UserController@store')->name('users.store');
         //用户登录
         Route::post('/login', 'UserController@login')->name('users.login');
+        //测试跨域问题
+        Route::get('foo', function () {
+            return 'Hello World';
+        });
 
         Route::middleware('api.refresh')->group(function () {
             //当前用户信息
@@ -73,11 +77,7 @@ Route::namespace('Api')->prefix('v1')->middleware('cors')->group(function () {
             Route::post('/feeds', 'FeedsController@store')->name('feeds.index');
 
 
-
-
         });
-
-
 
 
     });

@@ -36,6 +36,7 @@ class UserController extends Controller
     //用户登录
     public function login(Request $request){
         $token=Auth::claims(['guard'=>'api'])->attempt(['name'=>$request->name,'password'=>$request->password]);
+
         if($token) {
             //如果登陆，先检查原先是否有存token，有的话先失效，然后再存入最新的token
             $user = Auth::user();
@@ -47,8 +48,9 @@ class UserController extends Controller
                 }
             }
             SaveLastTokenJob::dispatch($user,$token);
+            $token_time = time()+config('jwt.ttl');
 
-            return $this->setStatusCode(201)->success(['token' => 'bearer ' . $token]);
+            return $this->setStatusCode(201)->success(['token' => 'bearer ' . $token,'token_end_time'=>$token_time]);
         }
         return $this->failed('账号或密码错误',400);
     }

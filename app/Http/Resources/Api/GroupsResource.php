@@ -22,6 +22,8 @@ class GroupsResource extends JsonResource
             'id'=>$this->id,
             'name' => $this->name,
             'user_id' => $this->user_id,
+            'img_head' => $this->img_head,
+            'img_top' => $this->img_top,
             'category_id' => $this->category_id,
             'area_id' => $this->area_id,
             'allow_feed' => $this->allow_feed,

@@ -22,7 +22,7 @@ class GroupsController extends Controller
     public function index()
     {
         //圈子列表
-        $groups = Groups::where('audit','1')->orderBy('created_at', 'desc')->paginate(10);
+        $groups = Groups::where('audit','1')->orderBy('created_at', 'desc')->paginate(2);
 
         return GroupsResource::collection($groups);
     }
