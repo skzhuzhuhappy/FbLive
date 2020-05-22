@@ -16,7 +16,6 @@
         "laravel/horizon": "^3.0",
         "laravel/tinker": "^1.0",
         "medz/cors": "^1.4",
-        "mpociot/laravel-apidoc-generator": "^4.8",
         "tymon/jwt-auth": "1.0.0-rc.3"
     },
     "require-dev": {

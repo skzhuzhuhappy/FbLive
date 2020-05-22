@@ -35,8 +35,8 @@ class UserController extends Controller
     }
     //用户登录
     public function login(Request $request){
-        $token=Auth::claims(['guard'=>'api'])->attempt(['name'=>$request->name,'password'=>$request->password]);
 
+        $token=Auth::claims(['guard'=>'api'])->attempt(['name'=>$request->name,'password'=>$request->password]);
         if($token) {
             //如果登陆，先检查原先是否有存token，有的话先失效，然后再存入最新的token
             $user = Auth::user();
