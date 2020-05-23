@@ -23,7 +23,7 @@ class FeedsResource extends JsonResource
             'from_id' => $this->from_id,
             'group_id' => $this->group_id,
             'user_id' =>$this->user_id,
-            'feed_content' => $this->feed_content,
+            'feed_content' => explode(',',$this->feed_content) ,
             'text_body' => $this->text_body,
             'like_count' => $this->like_count,
             'feed_view_count' => $this->feed_view_count,
