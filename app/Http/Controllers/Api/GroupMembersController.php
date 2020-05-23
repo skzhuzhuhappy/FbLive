@@ -20,7 +20,7 @@ class GroupMembersController extends Controller
             return $this->failed('传入user_id 不是当前登陆用户',402);
         }
 
-        $res = GroupMembers::where($result)->first();
+        $res = GroupMembers::where(['group_id'=>$request->group_id,'user_id'=>$request->user_id])->first();
         if($res){
             return $this->failed('该用户已经加入该圈子',402);
         }else{
