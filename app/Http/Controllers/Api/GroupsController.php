@@ -80,7 +80,7 @@ class GroupsController extends Controller
             return $this->failed('参数名称不对',402);
             //return $this->errorBadRequest($validator);
         }
-        $groups = Groups::where($request->all())->orderBy('created_at', 'desc')->paginate(10);
+        $groups = Groups::where(['category_id'=>$request->category_id,'area_id'=>$request->area_id])->orderBy('created_at', 'desc')->paginate(10);
         return GroupsResource::collection($groups);
     }
 
