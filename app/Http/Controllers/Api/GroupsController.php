@@ -22,7 +22,7 @@ class GroupsController extends Controller
     public function index()
     {
         //圈子列表
-        $groups = Groups::where('audit','1')->orderBy('created_at', 'desc')->paginate(2);
+        $groups = Groups::where('status','1')->orderBy('created_at', 'desc')->paginate(2);
 
         return GroupsResource::collection($groups);
     }
@@ -37,7 +37,7 @@ class GroupsController extends Controller
     //某个用户下所有圈子
     public function useridIndex($id)
     {
-        $groups = Groups::where(['user_id' =>$id])->orderBy('created_at', 'desc')->paginate(10);
+        $groups = Groups::where(['user_id' =>$id])->orderBy('created_at', 'desc')->paginate(2);
         return GroupsResource::collection($groups);
     }
     //圈子类型 列表
@@ -115,7 +115,7 @@ class GroupsController extends Controller
 
         $user = Auth::user();
         $result['user_id'] = $user->getAuthIdentifier();
-        $result['audit'] = 1;
+        $result['status'] = 1;
         $group = Groups::create($result);
         if(!$group){
             return $this->failed('圈子创建失败',402);

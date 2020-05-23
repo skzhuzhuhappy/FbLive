@@ -24,7 +24,6 @@ class GroupsRequest extends FormRequest
                         //'node' => ['required',['between'=>1,3]],
                         'node' => ['required'],
                         'summary' => ['required','string'],
-                        'notice' => ['required','string'],
                     ];
                 }
             case 'PUT':
@@ -53,9 +52,6 @@ class GroupsRequest extends FormRequest
             'node.required' => 'node不能为空',
             'node.between' => 'node in 1，2，3',
             'summary.required' => '简介不能为空',
-            'notice.required' => '公告不能为空',
-
-
             'name.max' => '圈子名称最大长度为12个字符',
             'password.max' => '密码长度不能超过16个字符',
             'password.min' => '密码长度不能小于6个字符'

@@ -24,8 +24,7 @@ class Groups extends Model
         'allow_feed',
         'mode',
         'summary',
-        'notice',
-        'audit',
+        'status',
         'img_head',
         'img_top'
     ];
