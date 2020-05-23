@@ -38,6 +38,8 @@ class GroupsResource extends JsonResource
                 'mode_info' => GroupEnum::getStatusName($this->mode),
                 'status' => $this->status,
                 'status_info' => CommonEnum::getStatusName($this->status),
+                'users_count'=>$this->users_count,
+                'posts_count'=>$this->posts_count,
                 'created_at'=>(string)$this->created_at,
                 'updated_at'=>(string)$this->updated_at,
                 'user_id_info'=>new UserResource(User::find($this->user_id)),

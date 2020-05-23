@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Requests\Api\FeedsRequest;
 use App\Http\Resources\Api\FeedsResource;
 use App\Models\Feeds;
+use App\Models\Groups;
 use App\Transformers\PostTransformer;
 use Illuminate\Support\Facades\Auth;
 
@@ -15,14 +16,21 @@ class FeedsController extends Controller
     //创建动态
     public function store(FeedsRequest $request)
     {
+
         $result = $request->all();
         $user = Auth::user();
         if($result['user_id'] != $user->getAuthIdentifier()){
             return $this->failed('传入user_id 不是当前登陆用户',402);
         }
         //var_dump($result);exit();
+
         $result['audit_status'] = 1;
         Feeds::create($result);
+        
+        $group = Groups::find($request->group_id);
+        //var_dump($group);exit();
+        $group->posts_count = $group->posts_count +1;
+        $group->save();
         return $this->setStatusCode(201)->success('创建动态成功');
     }
 
