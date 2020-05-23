@@ -22,7 +22,7 @@ class Feeds extends Model
         'group_id',
         'feed_content',
         'text_body',
-        'audit_status',
+        'status',
     ];
 
     public function user()

@@ -13,9 +13,9 @@ class CommonEnum
             case self::INVALID:
                 return '未审核';
             case self::NORMAL:
-                return '正常';
+                return '通过';
             case self::FREEZE:
-                return '审核未通过';
+                return '拒绝';
             default:
                 return '正常';
         }

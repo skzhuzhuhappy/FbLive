@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\Api;
 
+use App\Models\Enum\CommonEnum;
 use App\Models\Enum\UserEnum;
 use App\Models\Groups;
 use App\Models\User;
@@ -27,7 +28,8 @@ class FeedsResource extends JsonResource
             'like_count' => $this->like_count,
             'feed_view_count' => $this->feed_view_count,
             'feed_comment_count' => $this->feed_comment_count,
-            'audit_status' => $this->audit_status,
+            'status' => $this->status,
+            'status_info'=>CommonEnum::getStatusName($this->status),
             'created_at'=>(string)$this->created_at,
             'updated_at'=>(string)$this->updated_at,
             'group_id_info'=>new GroupsResource(Groups::find($this->group_id)),

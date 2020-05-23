@@ -50,7 +50,10 @@ class UserController extends Controller
             SaveLastTokenJob::dispatch($user,$token);
             $token_time = time()+config('jwt.ttl');
 
-            return $this->setStatusCode(201)->success(['token' => 'bearer ' . $token,'token_end_time'=>$token_time]);
+            return $this->setStatusCode(201)->success(['token' => 'bearer ' . $token,
+                'token_end_time'=>$token_time,
+                'user_id'=>$user->getAuthIdentifier(),
+            ]);
         }
         return $this->failed('账号或密码错误',400);
     }
