@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 
 class GroupMembers extends Model
 {
@@ -20,7 +21,18 @@ class GroupMembers extends Model
         'disabled',
     ];
 
+    //判断用户当前登陆用户是否在圈子中
+    public static function is_group_auth($group_id)
+    {
+        $user = Auth::user();
+        return self::is_group_user_id($user->getAuthIdentifier(),$group_id);
+    }
 
+    //判断用户是否在圈子中
+    public static function is_group_user_id($user_id, $group_id)
+    {
+        return self::where(['user_id' => $user_id, 'group_id' => $group_id])->first() ? true : false;
+    }
 
 
 }
