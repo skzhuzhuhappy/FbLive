@@ -20,6 +20,7 @@ class Feeds extends Model
         'from_id',
         'user_id',
         'group_id',
+        'feed_id',
         'feed_content',
         'text_body',
         'status',

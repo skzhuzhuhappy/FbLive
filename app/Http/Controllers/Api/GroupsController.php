@@ -81,7 +81,15 @@ class GroupsController extends Controller
             return $this->failed('参数名称不对',402);
             //return $this->errorBadRequest($validator);
         }
-        $groups = Groups::where(['category_id'=>$request->category_id,'area_id'=>$request->area_id])->orderBy('created_at', 'desc')->get();
+        //圈子名称搜索
+        if(isset($request->name)&&$request->name){
+            $groups = Groups::where(['category_id'=>$request->category_id,'area_id'=>$request->area_id])
+                ->where('groups.name', 'like', '%' . $request->name . '%')
+                ->orderBy('created_at', 'desc')->get();
+        }else{
+            $groups = Groups::where(['category_id'=>$request->category_id,'area_id'=>$request->area_id])
+                ->orderBy('created_at', 'desc')->get();
+        }
         return GroupsResource::collection($groups);
     }
 

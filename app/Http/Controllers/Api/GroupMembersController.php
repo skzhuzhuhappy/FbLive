@@ -31,10 +31,8 @@ class GroupMembersController extends Controller
             //加入圈子
             $result['user_type'] = 1;
             GroupMembers::create($result);
-            $group = Groups::find($request->group_id);
-            //var_dump($group);exit();
-            $group->users_count = $group->users_count +1;
-            $group->save();
+            //更新圈子加入人数
+            (new Groups())->updateUserCount($request->group_id);
 
         }
         return $this->setStatusCode(201)->success('用户加入成功');

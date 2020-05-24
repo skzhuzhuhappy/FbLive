@@ -60,6 +60,8 @@ class GroupsResource extends JsonResource
                 'allow_feed' => $this->allow_feed,
                 'mode' => $this->mode,
                 'mode_info' => GroupEnum::getStatusName($this->mode),
+                'users_count'=>$this->users_count,
+                'posts_count'=>$this->posts_count,
                 'status' => $this->status,
                 'status_info' => CommonEnum::getStatusName($this->status),
                 'created_at'=>(string)$this->created_at,

@@ -54,6 +54,12 @@ class Groups extends Model
         $group->posts_count = $group->posts_count +1;
         $group->save();
     }
+    public function updateUserCount($group_id){
+        $group = Groups::find($group_id);
+        $group->users_count = $group->users_count +1;
+        $group->save();
+    }
+
 
 
 
