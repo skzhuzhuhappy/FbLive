@@ -22,7 +22,7 @@ class GroupsController extends Controller
     public function index()
     {
         //圈子列表
-        $groups = Groups::where('status','1')->orderBy('created_at', 'desc')->paginate(2);
+        $groups = Groups::where('status','1')->orderBy('created_at', 'desc')->get();
 
         return GroupsResource::collection($groups);
     }
@@ -31,32 +31,33 @@ class GroupsController extends Controller
     public function userIndex()
     {
         $user = Auth::user();
-        $groups = Groups::where(['user_id' => $user->getAuthIdentifier()])->orderBy('created_at', 'desc')->paginate(2);
+        $groups = Groups::where(['user_id' => $user->getAuthIdentifier()])->orderBy('created_at', 'desc')->get();
         return GroupsResource::collection($groups);
     }
     //某个用户下所有圈子
     public function useridIndex($id)
     {
-        $groups = Groups::where(['user_id' =>$id])->orderBy('created_at', 'desc')->paginate(2);
+        $groups = Groups::where(['user_id' =>$id])->orderBy('created_at', 'desc')->get();
         return GroupsResource::collection($groups);
     }
     //圈子类型 列表
     public function categorysIndex()
     {
-        $category_list = Groups::select('category_id')->get()->Toarray();
-        $category_id_list = array_unique(array_column($category_list,'category_id'));
-        //var_dump($category_list);exit();
-        $groups = GroupCategories::where(['status'=>0])->whereIn('id', $category_id_list)->orderBy('created_at', 'desc')->paginate(2);
+
+        //$category_list = Groups::select('category_id')->get()->Toarray();
+        //$category_id_list = array_unique(array_column($category_list,'category_id'));
+        //->whereIn('id', $category_id_list)
+        $groups = GroupCategories::where(['status'=>0])->orderBy('created_at', 'desc')->get();
         return GroupCategoriesResource::collection($groups);
     }
 
     //圈子地区 列表
     public function areasIndex()
     {
-        $area_list = Groups::select('area_id')->get()->Toarray();
-        $area_id_list = array_unique(array_column($area_list,'area_id'));
-        //var_dump($category_list);exit();
-        $groups = Areas::where(['pid'=>0])->whereIn('id', $area_id_list)->orderBy('created_at', 'desc')->paginate(2);
+        ///$area_list = Groups::select('area_id')->get()->Toarray();
+        //$area_id_list = array_unique(array_column($area_list,'area_id'));
+        //->whereIn('id', $area_id_list)
+        $groups = Areas::where(['pid'=>0])->orderBy('created_at', 'desc')->get();
         return GroupCategoriesResource::collection($groups);
     }
 
@@ -64,7 +65,7 @@ class GroupsController extends Controller
     public function groupuserIndex($id)
     {
         $user_list = GroupMembers::select('user_id')->where(['group_id'=>$id])->get()->ToArray();
-        $groups = User::whereIn('id', $user_list)->orderBy('created_at', 'desc')->paginate(2);
+        $groups = User::whereIn('id', $user_list)->orderBy('created_at', 'desc')->get();
         return UserResource::collection($groups);
     }
 
@@ -80,7 +81,7 @@ class GroupsController extends Controller
             return $this->failed('参数名称不对',402);
             //return $this->errorBadRequest($validator);
         }
-        $groups = Groups::where(['category_id'=>$request->category_id,'area_id'=>$request->area_id])->orderBy('created_at', 'desc')->paginate(2);
+        $groups = Groups::where(['category_id'=>$request->category_id,'area_id'=>$request->area_id])->orderBy('created_at', 'desc')->get();
         return GroupsResource::collection($groups);
     }
 

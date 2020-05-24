@@ -18,6 +18,7 @@ class CreateFeedsTable extends Migration
             $table->tinyInteger('from_id')->unsigned()->comment('动态来源 1:pc 2:h5 3:ios 4:android 5:其他');
             $table->integer('group_id')->unsigned()->comment('圈子 ID');
             $table->integer('user_id')->unsigned()->comment('创建者 ID');
+            $table->integer('pid')->unsigned()->default(0)->comment('pid=0 动态 pid !=0 评论');
             $table->text('feed_content')->nullable()->comment('动态内容');
             $table->text('text_body')->nullable()->comment('纯文字内容');
             $table->integer('like_count')->unsigned()->default(0)->comment('点赞统计');
@@ -30,8 +31,7 @@ class CreateFeedsTable extends Migration
             $table->tinyInteger('audit_status')->unsigned()->default(0)->comment('	审核状态, 0 - 待审核、1 - 通过、2 - 拒绝');
             $table->timestamps();
             $table->softDeletes();
-
-
+            
         });
     }
 

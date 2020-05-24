@@ -49,5 +49,12 @@ class Groups extends Model
         return $this->belongsTo(GroupCategories::class);
     }
 
+    public function updatePostCount($group_id){
+        $group = Groups::find($group_id);
+        $group->posts_count = $group->posts_count +1;
+        $group->save();
+    }
+
+
 
 }

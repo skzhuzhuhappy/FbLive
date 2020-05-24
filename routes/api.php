@@ -13,7 +13,7 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::namespace('Api')->prefix('v1')->middleware('cors')->group(function () {
+Route::namespace('Api')->prefix('v1')->group(function () {
     Route::middleware('api.guard')->group(function () {
         //用户注册
         Route::post('/users', 'UserController@store')->name('users.store');
@@ -78,6 +78,10 @@ Route::namespace('Api')->prefix('v1')->middleware('cors')->group(function () {
             //发布动态
             Route::post('/feeds', 'FeedsController@store')->name('feeds.index');
 
+            //添加动态评论
+            Route::post('/feeds/reply', 'FeedsController@reply')->name('feeds.reply');
+            //动态详情
+            Route::get('/feeds/{id}', 'FeedsController@show')->name('feeds.show');
 
         });
 
