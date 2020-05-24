@@ -7,6 +7,11 @@
  * @author   Taylor Otwell <taylor@laravel.com>
  */
 
+
+header("Access-Control-Allow-Origin:*");
+header("Access-Control-Allow-Headers:*");
+header("content-type:text/html;charset=utf-8");  //设置编码
+
 define('LARAVEL_START', microtime(true));
 
 /*
