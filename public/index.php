@@ -10,6 +10,7 @@
 header("Access-Control-Allow-Origin:*");
 header("Access-Control-Allow-Headers:*");
 header("content-type:text/html;charset=utf-8");  //设置编码
+header("Access-Control-Expose-Headers:Authorization");//允许axios获取响应头中的Authorization
 
 
 /*header("content-type:text/html;charset=utf-8");  //设置编码
