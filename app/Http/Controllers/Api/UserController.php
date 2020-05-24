@@ -14,53 +14,86 @@ class UserController extends Controller
 {
 
     //返回用户列表
-    public function index(){
+    public function index()
+    {
         //3个用户为一页
         $users = User::paginate(3);
         return UserResource::collection($users);
     }
+
     //返回单一用户信息
-    public function show(User $user){
+    public function show(User $user)
+    {
         return $this->success(new UserResource($user));
     }
+
     //返回当前登录用户信息
-    public function info(){
+    public function info()
+    {
         $user = Auth::user();
         return $this->success(new UserResource($user));
     }
+
     //用户注册
-    public function store(UserRequest $request){
+    public function store(UserRequest $request)
+    {
         User::create($request->all());
         return $this->setStatusCode(201)->success('用户注册成功');
     }
+
     //用户登录
-    public function login(Request $request){
+    public function login(Request $request)
+    {
 
-        $token=Auth::claims(['guard'=>'api'])->attempt(['name'=>$request->name,'password'=>$request->password]);
+        //调用加密
+        //var_dump($request->password);exit();
+        $post_data['password']  = $this->http_request('http://media.fblife.com/encode/password', ['pwd'=>$request->password]);
+        //调用登录
+        $post_data['username'] = $request->name;
+        $post_data['ip'] = $request->ip();
+        $datas = $this->send_post("https://fb-cms.fblife.com/api/web/user/login", $post_data);
+        if ($datas['recode'] == 200) {
+            //var_dump($datas['body']['info']['icon']);exit();
+            //登陆成功
+            $userinfo = User::where(['name'=>$datas['body']['info']['username']])->first();
+            //$userinfo = User::where(['name'=>'guaosi1'])->get();
+            if(!$userinfo){
+                $create = $request->all();
+                $create['phone'] = $datas['body']['info']['mobile'];
+                $create['avatar'] = $datas['body']['info']['icon'];
+                $create['forum_user_id'] = $datas['body']['info']['uid'];
+                $create['sex'] = $datas['body']['info']['type'];
+                User::create($create);
+            }
+        }
 
-        if($token) {
+        $token = Auth::claims(['guard' => 'api'])->attempt(['name' => $request->name, 'password' => $request->password]);
+
+        if ($token) {
             //如果登陆，先检查原先是否有存token，有的话先失效，然后再存入最新的token
             $user = Auth::user();
-            if($user->last_token){
-                try{
+            if ($user->last_token) {
+                try {
                     Auth::setToken($user->last_token)->invalidate();
-                }catch (TokenExpiredException $e){
+                } catch (TokenExpiredException $e) {
                     //因为让一个过期的token再失效，会抛出异常，所以我们捕捉异常，不需要做任何处理
                 }
             }
-            SaveLastTokenJob::dispatch($user,$token);
-            $token_time = time()+config('jwt.ttl');
+            SaveLastTokenJob::dispatch($user, $token);
+            $token_time = time() + config('jwt.ttl');
 
             return $this->setStatusCode(201)->success(['token' => 'bearer ' . $token,
-                'token_end_time'=>$token_time,
-                'user_id'=>$user->getAuthIdentifier(),
+                'token_end_time' => $token_time,
+                'user_id' => $user->getAuthIdentifier(),
             ]);
         }
 
-        return $this->failed('账号或密码错误',400);
+        return $this->failed('账号或密码错误', 400);
     }
+
     //用户退出
-    public function logout(){
+    public function logout()
+    {
         Auth::logout();
         return $this->success('退出成功...');
     }
