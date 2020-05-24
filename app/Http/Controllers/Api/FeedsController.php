@@ -75,7 +75,7 @@ class FeedsController extends Controller
     public function userIndex($id)
     {
 
-        $feed_list = Feeds::where(['user_id' => $id])->orderBy('created_at', 'desc')->paginate(2);
+        $feed_list = Feeds::where(['user_id' => $id])->orderBy('created_at', 'desc')->get();
 
         return FeedsResource::collection($feed_list);
     }
@@ -84,7 +84,7 @@ class FeedsController extends Controller
     //圈子下的动态列表
     public function groupIndex($id)
     {
-        $feed_list = Feeds::where(['group_id' => $id])->orderBy('created_at', 'desc')->paginate(2);
+        $feed_list = Feeds::where(['group_id' => $id,'feed_id'=>0])->orderBy('created_at', 'desc')->get();
 
         return FeedsResource::collection($feed_list);
     }
