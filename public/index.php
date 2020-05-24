@@ -7,14 +7,18 @@
  * @author   Taylor Otwell <taylor@laravel.com>
  */
 
-
+header("Access-Control-Allow-Origin:*");
+header("Access-Control-Allow-Headers:*");
 header("content-type:text/html;charset=utf-8");  //设置编码
+
+
+/*header("content-type:text/html;charset=utf-8");  //设置编码
 header('Access-Control-Allow-Origin', '*'); //允许所有资源跨域
 header('Access-Control-Allow-Headers', '*');//允许通过的响应报头
-header('Access-Control-Allow-Methods', 'GET, POST, PATCH, PUT, OPTIONS, DELETE');//允许的请求方法
+header('Access-Control-Allow-Methods', '*');//允许的请求方法
 header('Access-Control-Expose-Headers', 'Authorization');//允许axios获取响应头中的Authorization
-header('Allow', 'GET, POST, PATCH, PUT, OPTIONS, delete');//允许的请求方法
-header('Access-Control-Allow-Credentials', 'true');//运行客户端携带证书式访问
+header('Allow','*');//允许的请求方法
+header('Access-Control-Allow-Credentials', 'true');//运行客户端携带证书式访问*/
 
 define('LARAVEL_START', microtime(true));
 
