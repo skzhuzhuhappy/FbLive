@@ -19,6 +19,9 @@ class FeedsController extends Controller
 
         $result = $request->all();
         $user = Auth::user();
+        if(!$user){
+            return $this->failed('未获得用户，检查token',402);
+        }
         if($result['user_id'] != $user->getAuthIdentifier()){
             return $this->failed('传入user_id 不是当前登陆用户',402);
         }
@@ -26,7 +29,7 @@ class FeedsController extends Controller
 
         $result['audit_status'] = 1;
         Feeds::create($result);
-        
+
         $group = Groups::find($request->group_id);
         //var_dump($group);exit();
         $group->posts_count = $group->posts_count +1;
@@ -38,7 +41,7 @@ class FeedsController extends Controller
     public function userIndex($id)
     {
 
-        $feed_list = Feeds::where(['user_id'=>$id])->orderBy('created_at', 'desc')->paginate(10);
+        $feed_list = Feeds::where(['user_id'=>$id])->orderBy('created_at', 'desc')->paginate(2);
 
         return FeedsResource::collection($feed_list);
     }
@@ -47,7 +50,7 @@ class FeedsController extends Controller
     //圈子下的动态列表
     public function groupIndex($id)
     {
-        $feed_list = Feeds::where(['group_id'=>$id])->orderBy('created_at', 'desc')->paginate(10);
+        $feed_list = Feeds::where(['group_id'=>$id])->orderBy('created_at', 'desc')->paginate(2);
 
         return FeedsResource::collection($feed_list);
     }

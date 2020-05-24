@@ -114,6 +114,9 @@ class GroupsController extends Controller
         $result['img_top'] = $img_top_path;*/
 
         $user = Auth::user();
+        if(!$user){
+            return $this->failed('未获得用户，检查token',402);
+        }
         $result['user_id'] = $user->getAuthIdentifier();
         $result['status'] = 1;
         $group = Groups::create($result);

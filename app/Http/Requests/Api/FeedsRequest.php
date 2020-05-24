@@ -23,7 +23,6 @@ class FeedsRequest extends FormRequest
                         'from_id' => ['required','integer'],
                         'user_id' => ['required','exists:users,id','integer'],
                         'group_id' => ['required','exists:groups,id','integer'],
-                        'feed_content' =>  ['required','string'],
                         'text_body' =>  ['required','string'],
                     ];
                 }
@@ -50,8 +49,6 @@ class FeedsRequest extends FormRequest
             'group_id.required' => '圈子ID不能为空',
             'group_id.integer' => '圈子ID是数字类型',
             'group_id.exists'=>'圈子ID不存在',
-            'feed_content.required' => '动态内容不能为空',
-            'feed_content.string' => '动态内容是字符串',
             'text_body.required' => '纯文字不能为空',
             'text_body.string' => '纯文字是字符串',
         ];
