@@ -11,6 +11,8 @@ header("content-type:text/html;charset=utf-8");  //设置编码
 class Controller extends BaseController
 {
 
+    use ApiResponse;
+  
     // 其他通用的Api帮助函数
 
 }

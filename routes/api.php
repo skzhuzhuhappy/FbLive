@@ -13,7 +13,6 @@ use Illuminate\Http\Request;
 |
 */
 
-
 Route::namespace('Api')->prefix('v1')->middleware('cors')->group(function () {
     Route::middleware('api.guard')->group(function () {
         //用户注册
@@ -24,6 +23,8 @@ Route::namespace('Api')->prefix('v1')->middleware('cors')->group(function () {
         Route::get('foo', function () {
             return 'Hello World';
         });
+        //圈子详情
+        Route::get('/groups/{id}', 'GroupsController@show')->name('groups.show');
 
         Route::middleware('api.refresh')->group(function () {
             //当前用户信息
@@ -35,7 +36,6 @@ Route::namespace('Api')->prefix('v1')->middleware('cors')->group(function () {
             //用户退出
             Route::get('/logout', 'UserController@logout')->name('users.logout');
 
-
         });
 
         /*
@@ -43,8 +43,6 @@ Route::namespace('Api')->prefix('v1')->middleware('cors')->group(function () {
          * */
         //圈子列表
         Route::get('/groups', 'GroupsController@index')->name('groups.index');
-        //圈子详情
-        Route::get('/groups/{id}', 'GroupsController@show')->name('groups.show');
         //类型 地点 下的圈子
         Route::get('/catearea/groups', 'GroupsController@cateareaIndex')->name('catearea.groups.index');
         //圈子的类型列表
@@ -80,7 +78,9 @@ Route::namespace('Api')->prefix('v1')->middleware('cors')->group(function () {
             //发布动态
             Route::post('/feeds', 'FeedsController@store')->name('feeds.index');
 
+
         });
+
 
     });
 

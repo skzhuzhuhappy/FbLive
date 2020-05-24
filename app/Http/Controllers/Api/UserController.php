@@ -37,6 +37,7 @@ class UserController extends Controller
     public function login(Request $request){
 
         $token=Auth::claims(['guard'=>'api'])->attempt(['name'=>$request->name,'password'=>$request->password]);
+
         if($token) {
             //如果登陆，先检查原先是否有存token，有的话先失效，然后再存入最新的token
             $user = Auth::user();
@@ -55,6 +56,7 @@ class UserController extends Controller
                 'user_id'=>$user->getAuthIdentifier(),
             ]);
         }
+
         return $this->failed('账号或密码错误',400);
     }
     //用户退出
