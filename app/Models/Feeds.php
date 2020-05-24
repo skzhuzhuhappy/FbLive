@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Http\Resources\Api\FeedsResource;
+use App\Http\Resources\Api\GroupsResource;
 use Illuminate\Database\Eloquent\Model;
 
 class Feeds extends Model
@@ -29,6 +31,15 @@ class Feeds extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public static function replayList($feed_id){
+        $list =  self::where(['feed_id'=>$feed_id])->get();
+        if($list){
+            return FeedsResource::collection($list);
+        }else{
+            return [];
+        }
     }
 
 

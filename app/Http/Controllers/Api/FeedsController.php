@@ -62,9 +62,14 @@ class FeedsController extends Controller
 
     //动态详情
     public function show($id){
-        $feeds = Feeds::findOrFail($id);
-        return $this->success(new FeedsResource($feeds));
+        $feeds= Feeds::findOrFail($id);
+        if($feeds->feed_id == 0){
+            return $this->success(new FeedsResource($feeds));
+        }else{
+            return $this->failed('请传入动态id', 402);
+        }
     }
+
 
     //用户动态列表
     public function userIndex($id)

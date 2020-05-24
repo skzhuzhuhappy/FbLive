@@ -20,7 +20,7 @@ class FeedsResource extends JsonResource
     public function toArray($request)
     {
 
-        if (isset($this->feed_id) && $this->feed_id) {
+        if (isset($this->feed_id) && $this->feed_id == 0) {
             return [
                 'id' => $this->id,
                 'from_id' => $this->from_id,
@@ -38,7 +38,8 @@ class FeedsResource extends JsonResource
                 'updated_at' => (string)$this->updated_at,
                 'group_id_info' => new GroupsResource(Groups::find($this->group_id)),
                 'user_id_info' => new UserResource(User::find($this->user_id)),
-                'feed_id_info' => new FeedsResource(Feeds::find($this->feed_id)),
+                //'feed_id_info' => new FeedsResource(Feeds::find($this->feed_id)),
+                'feed_id_info' =>(new Feeds())->replayList($this->id),
             ];
         } else {
             return [
