@@ -52,6 +52,7 @@ class UserController extends Controller
         $post_data['username'] = $request->name;
         $post_data['ip'] = $request->ip();
         $datas = $this->send_post("https://fb-cms.fblife.com/api/web/user/login", $post_data);
+        ///var_dump($datas);
         if ($datas['recode'] == 200) {
             //var_dump($datas['body']['info']['icon']);exit();
             //登陆成功
@@ -64,10 +65,13 @@ class UserController extends Controller
                 $create['forum_user_id'] = $datas['body']['info']['uid'];
                 $create['sex'] = $datas['body']['info']['type'];
                 User::create($create);
+                ////var_dump(11111);
             }
         }
 
-        $token = Auth::claims(['guard' => 'api'])->attempt(['name' => $request->name, 'password' => $request->password]);
+
+
+        $token = Auth::claims(['guard' => 'api'])->attempt(['name' =>$datas['body']['info']['username'], 'password' => $request->password]);
 
         if ($token) {
             //如果登陆，先检查原先是否有存token，有的话先失效，然后再存入最新的token
