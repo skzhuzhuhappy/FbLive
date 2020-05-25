@@ -14,6 +14,13 @@ use Illuminate\Support\Facades\Auth;
 class FeedsController extends Controller
 {
 
+    //所有圈子动态
+    public function Index()
+    {
+        $feed_list = Feeds::feedList([]);
+
+        return FeedsResource::collection($feed_list);
+    }
 
     //创建动态
     public function store(FeedsRequest $request)
@@ -61,11 +68,12 @@ class FeedsController extends Controller
     }
 
     //动态详情
-    public function show($id){
-        $feeds= Feeds::findOrFail($id);
-        if($feeds->feed_id == 0){
+    public function show($id)
+    {
+        $feeds = Feeds::findOrFail($id);
+        if ($feeds->feed_id == 0) {
             return $this->success(new FeedsResource($feeds));
-        }else{
+        } else {
             return $this->failed('请传入正确动态id', 402);
         }
     }
@@ -74,9 +82,7 @@ class FeedsController extends Controller
     //用户动态列表
     public function userIndex($id)
     {
-
-        $feed_list = Feeds::where(['user_id' => $id])->orderBy('created_at', 'desc')->get();
-
+        $feed_list = Feeds::feedList(['user_id'=>$id]);
         return FeedsResource::collection($feed_list);
     }
 
@@ -84,8 +90,7 @@ class FeedsController extends Controller
     //圈子下的动态列表
     public function groupIndex($id)
     {
-        $feed_list = Feeds::where(['group_id' => $id,'feed_id'=>0])->orderBy('created_at', 'desc')->get();
-
+        $feed_list = Feeds::feedList(['group_id'=>$id]);
         return FeedsResource::collection($feed_list);
     }
 

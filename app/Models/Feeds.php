@@ -33,13 +33,21 @@ class Feeds extends Model
         return $this->belongsTo(User::class);
     }
 
-    public static function replayList($feed_id){
-        $list =  self::where(['feed_id'=>$feed_id])->get();
-        if($list){
+    public static function replayList($feed_id)
+    {
+        $list = self::where(['feed_id' => $feed_id])->get();
+        if ($list) {
             return FeedsResource::collection($list);
-        }else{
+        } else {
             return [];
         }
+    }
+
+    //查询动态
+    public static function feedList($data)
+    {
+        $data['feed_id'] = 0;
+        return self::where($data)->orderBy('created_at', 'desc')->get();
     }
 
 

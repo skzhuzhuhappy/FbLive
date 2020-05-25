@@ -57,9 +57,12 @@ Route::namespace('Api')->prefix('v1')->group(function () {
 
         //圈子的动态列表
         Route::get('/feeds/group/{id}', 'FeedsController@groupIndex')->name('feeds.group.index');
+        //所有圈子的所有动态
+        Route::get('/feeds', 'FeedsController@Index')->name('feeds.index');
 
         //用户的动态列表
         Route::get('/feeds/user/{id}', 'FeedsController@userIndex')->name('feeds.user.index');
+
 
         Route::middleware('api.refresh')->group(function () {
             //登陆用户加入的圈子列表
