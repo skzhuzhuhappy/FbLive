@@ -66,7 +66,7 @@ class FeedsController extends Controller
         if($feeds->feed_id == 0){
             return $this->success(new FeedsResource($feeds));
         }else{
-            return $this->failed('请传入动态id', 402);
+            return $this->failed('请传入正确动态id', 402);
         }
     }
 
