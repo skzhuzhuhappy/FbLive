@@ -44,10 +44,16 @@ class Feeds extends Model
     }
 
     //查询动态
-    public static function feedList($data)
+    public static function feedList($data,$num)
     {
         $data['feed_id'] = 0;
-        return self::where($data)->orderBy('created_at', 'desc')->get();
+        if($num){
+            return self::where($data)->orderBy('created_at', 'desc')->paginate($num);
+
+        }else{
+            return self::where($data)->orderBy('created_at', 'desc')->get();
+
+        }
     }
 
 
