@@ -67,6 +67,8 @@ class UserController extends Controller
                 User::create($create);
                 ////var_dump(11111);
             }
+        }else{
+            return $this->failed('账号或密码错误或不存在', 400);
         }
 
 
@@ -92,7 +94,7 @@ class UserController extends Controller
             ]);
         }
 
-        return $this->failed('账号或密码错误', 400);
+        return $this->failed('账号或密码错误或不存在', 400);
     }
 
     //用户退出
