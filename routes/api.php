@@ -62,7 +62,8 @@ Route::namespace('Api')->prefix('v1')->group(function () {
 
         //用户的动态列表
         Route::get('/feeds/user/{id}', 'FeedsController@userIndex')->name('feeds.user.index');
-
+        //动态详情
+        Route::get('/feeds/{id}', 'FeedsController@show')->name('feeds.show');
 
         Route::middleware('api.refresh')->group(function () {
             //登陆用户加入的圈子列表
@@ -83,8 +84,7 @@ Route::namespace('Api')->prefix('v1')->group(function () {
 
             //添加动态评论
             Route::post('/feeds/reply', 'FeedsController@reply')->name('feeds.reply');
-            //动态详情
-            Route::get('/feeds/{id}', 'FeedsController@show')->name('feeds.show');
+
 
         });
 
