@@ -17,8 +17,7 @@ class FeedsController extends Controller
     //所有圈子动态
     public function Index()
     {
-        $feed_list = Feeds::feedList([]);
-
+        $feed_list = Feeds::feedList([],5);
         return FeedsResource::collection($feed_list);
     }
 
