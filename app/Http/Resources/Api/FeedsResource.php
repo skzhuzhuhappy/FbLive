@@ -39,7 +39,7 @@ class FeedsResource extends JsonResource
                 'group_id_info' => new GroupsResource(Groups::find($this->group_id)),
                 'user_id_info' => new UserResource(User::find($this->user_id)),
                 //'feed_id_info' => new FeedsResource(Feeds::find($this->feed_id)),
-                'feed_id_info' =>(new Feeds())->replayList($this->id),
+                'feed_id_info' =>(new Feeds())->replayList($this->id,1),
             ];
         } else {
             return [

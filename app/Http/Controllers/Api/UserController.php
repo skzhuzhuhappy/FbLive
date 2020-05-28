@@ -57,6 +57,7 @@ class UserController extends Controller
             //var_dump($datas['body']['info']['icon']);exit();
             //登陆成功
             $userinfo = User::where(['name'=>$datas['body']['info']['username']])->first();
+            //var_dump($userinfo);exit();
             //$userinfo = User::where(['name'=>'guaosi1'])->get();
             if(!$userinfo){
                 $create = $request->all();

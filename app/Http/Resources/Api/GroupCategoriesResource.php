@@ -3,6 +3,7 @@
 namespace App\Http\Resources\Api;
 
 use App\Models\Enum\UserEnum;
+use App\Models\GroupCategories;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class GroupCategoriesResource extends JsonResource
@@ -15,13 +16,19 @@ class GroupCategoriesResource extends JsonResource
      */
     public function toArray($request)
     {
-        return [
-            'id'=>$this->id,
-            'name' => $this->name,
-            'sort_by' => $this->sort_by,
-            'status' => UserEnum::getStatusName($this->status),
-            'created_at'=>(string)$this->created_at,
-            'updated_at'=>(string)$this->updated_at
-        ];
+            return [
+                'id'=>$this->id,
+                'name' => $this->name,
+                'parent_id' => $this->parent_id,
+                'is_directory' => $this->is_directory,
+                'level' => $this->level,
+                'path' => $this->path,
+                'status' => UserEnum::getStatusName($this->status),
+                'created_at'=>(string)$this->created_at,
+                'updated_at'=>(string)$this->updated_at,
+                'category_list'=>GroupCategoriesResource::collection($this->children),
+            ];
+
+
     }
 }

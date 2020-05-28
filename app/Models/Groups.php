@@ -25,6 +25,7 @@ class Groups extends Model
         'mode',
         'summary',
         'status',
+        'feed_status',
         'img_head',
         'img_top'
     ];

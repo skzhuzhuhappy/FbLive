@@ -41,6 +41,8 @@ Route::namespace('Api')->prefix('v1')->group(function () {
         /*
          * 圈子相关路由
          * */
+
+
         //圈子列表
         Route::get('/groups', 'GroupsController@index')->name('groups.index');
         //类型 地点 下的圈子

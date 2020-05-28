@@ -32,6 +32,8 @@ class CreateGroupsTable extends Migration
             $table->integer('users_count')->unsigned()->default(0)->comment('成员数量');
             $table->integer('posts_count')->unsigned()->default(0)->comment('帖子数量');
             $table->tinyInteger('status')->unsigned()->default(0)->comment('	审核状态, 0 -待审核、1 - 通过、2 - 拒绝');
+            $table->tinyInteger('feed_status')->unsigned()->default(0)->comment('发布的动态是否需要审核 0 不需要 1 需要');
+
             $table->timestamps();
             $table->softDeletes();
 

@@ -14,15 +14,15 @@ class CreateGroupCategoriesTable extends Migration
     public function up()
     {
         Schema::create('group_categories', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->string('name')->comment('类型名称');
-            $table->integer('sort_by')->default(0)->comment('排序值');
-            $table->tinyInteger('status')->default(0)->comment('启用状态');
+            $table->increments('id');
+            $table->string('name')->comment('分类名称');
+            $table->unsignedInteger('parent_id')->nullable()->comment('父类id');
+            //$table->foreign('parent_id')->references('id')->on('categories')->onDelete('cascade');
+            $table->boolean('is_directory')->comment('是否有子类目');
+            $table->unsignedInteger('level')->comment('当前类目层级');
+            $table->string('path')->comment('该分类的所有父类id, 用 - 连接');
+            $table->tinyInteger('status')->default(0)->comment('是否显示');
             $table->timestamps();
-            $table->softDeletes();
-
-            $table->unique('name');
-            $table->index('status');
         });
     }
 

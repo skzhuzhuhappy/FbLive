@@ -33,9 +33,12 @@ class Feeds extends Model
         return $this->belongsTo(User::class);
     }
 
-    public static function replayList($feed_id)
+    public static function replayList($feed_id, $status = 0)
     {
-        $list = self::where(['feed_id' => $feed_id])->get();
+        $where['feed_id'] = $feed_id;
+        $where['status'] = $status;
+
+        $list = self::where($where)->get();
         if ($list) {
             return FeedsResource::collection($list);
         } else {
@@ -44,17 +47,17 @@ class Feeds extends Model
     }
 
     //查询动态
-    public static function feedList($data,$num=0)
+    public static function feedList($data, $num = 0)
     {
-
         $data['feed_id'] = 0;
-        if($num){
+        $data['status'] = 1;
+        //var_dump($wb);exit();
+        if ($num) {
             return self::where($data)->orderBy('created_at', 'desc')->paginate($num);
-
-        }else{
+        } else {
             return self::where($data)->orderBy('created_at', 'desc')->get();
-
         }
+
     }
 
 
