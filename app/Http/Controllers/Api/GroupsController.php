@@ -134,6 +134,7 @@ class GroupsController extends Controller
         }
         $result['user_id'] = $user->getAuthIdentifier();
         $result['status'] = 1;
+        $result['users_count'] = 1;
         $group = Groups::create($result);
         if(!$group){
             return $this->failed('圈子创建失败',402);
@@ -144,6 +145,7 @@ class GroupsController extends Controller
         $res_mem['group_id'] = $group->id;
         $res_mem['user_id'] = $group->user_id;
         $res_mem['user_type'] = 3;
+
         $group_mem = GroupMembers::create($res_mem);
         if(!$group_mem){
             return $this->failed('圈子创建失败',402);
