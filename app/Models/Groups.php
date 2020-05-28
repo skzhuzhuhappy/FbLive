@@ -27,7 +27,9 @@ class Groups extends Model
         'status',
         'feed_status',
         'img_head',
-        'img_top'
+        'img_top',
+        'users_count',
+        'posts_count',
     ];
 
     public function user()
