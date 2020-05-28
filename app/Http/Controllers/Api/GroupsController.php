@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Requests\Api\GroupsRequest;
+use App\Http\Resources\Api\AreasResource;
 use App\Http\Resources\Api\GroupCategoriesResource;
 use App\Http\Resources\Api\GroupsResource;
 use App\Http\Resources\Api\UserResource;
@@ -63,7 +64,7 @@ class GroupsController extends Controller
         //$area_id_list = array_unique(array_column($area_list,'area_id'));
         //->whereIn('id', $area_id_list)
         $groups = Areas::where(['pid'=>0])->orderBy('created_at', 'desc')->get();
-        return GroupCategoriesResource::collection($groups);
+        return AreasResource::collection($groups);
     }
 
     //圈子下的用户列表
