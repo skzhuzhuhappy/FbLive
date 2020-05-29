@@ -66,7 +66,7 @@ class   GroupCategories extends Model
     public function getAncestorsAttribute()
     {
         return GroupCategories::query()
-            ->whereIn('id', $this->path_ids) // 调用 getPathIdsAttribute 获取祖先类目id
+            ->whereIn('id', $this->parent_id) // 调用 getPathIdsAttribute 获取祖先类目id
             ->orderBy('level') // 按层级排列
             ->get();
     }

@@ -4,6 +4,7 @@ namespace App\Http\Resources\Api;
 
 use App\Models\Enum\CommonEnum;
 use App\Models\Enum\UserEnum;
+use App\Models\FeedLike;
 use App\Models\Feeds;
 use App\Models\Groups;
 use App\Models\User;
@@ -40,6 +41,7 @@ class FeedsResource extends JsonResource
                 'user_id_info' => new UserResource(User::find($this->user_id)),
                 //'feed_id_info' => new FeedsResource(Feeds::find($this->feed_id)),
                 'feed_id_info' =>(new Feeds())->replayList($this->id,1),
+                'is_like' =>FeedLike::is_like_auth($this->id)
             ];
         } else {
             return [
@@ -59,6 +61,8 @@ class FeedsResource extends JsonResource
                 'updated_at' => (string)$this->updated_at,
                 'group_id_info' => new GroupsResource(Groups::find($this->group_id)),
                 'user_id_info' => new UserResource(User::find($this->user_id)),
+                'is_like' =>FeedLike::is_like_auth($this->id)
+
             ];
         }
 

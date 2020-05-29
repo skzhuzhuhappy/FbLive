@@ -74,7 +74,7 @@ class FeedsController extends Controller
         $result['status'] = 1;
         Feeds::create($result);
 
-        (new Groups)->updatePostCount($request->group_id);
+        //(new Groups)->updatePostCount($request->group_id);
 
         return $this->setStatusCode(201)->success('添加动态评论成功');
     }

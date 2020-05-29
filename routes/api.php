@@ -68,6 +68,7 @@ Route::namespace('Api')->prefix('v1')->group(function () {
         Route::get('/feeds/{id}', 'FeedsController@show')->name('feeds.show');
 
         Route::middleware('api.refresh')->group(function () {
+
             //登陆用户加入的圈子列表
             Route::get('/user/groups', 'GroupsController@userIndex')->name('user.groups.index');
             //新建圈子
@@ -82,10 +83,12 @@ Route::namespace('Api')->prefix('v1')->group(function () {
             Route::delete('/group/exit/{id}', 'GroupsController@groupExit')->name('group.exit');
 
             //发布动态
-            Route::post('/feeds', 'FeedsController@store')->name('feeds.index');
+            Route::post('/feeds', 'FeedsController@store')->name('feeds.store');
 
             //添加动态评论
             Route::post('/feeds/reply', 'FeedsController@reply')->name('feeds.reply');
+            //动态点赞
+            Route::post('/feedlike', 'FeedLikeController@store')->name('feeds.store');
 
 
         });

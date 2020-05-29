@@ -28,8 +28,10 @@ class RefreshTokenMiddleware extends BaseMiddleware
      */
     public function handle($request, Closure $next)
     {
+
         // 检查此次请求中是否带有 token，如果没有则抛出异常。
-        $this->checkForToken($request);
+       //$this->checkForToken($request);
+
         //1. 格式通过，验证是否是专属于这个的token
 
         //获取当前守护的名称
@@ -37,7 +39,9 @@ class RefreshTokenMiddleware extends BaseMiddleware
 
         //获取当前token
         $token=Auth::getToken();
-
+        if (empty($token)) {
+            throw new TokenInvalidException();
+        }
         //即使过期了，也能获取到token里的 载荷 信息。
         $payload = Auth::manager()->getJWTProvider()->decode($token->get());
         //如果不包含guard字段或者guard所对应的值与当前的guard守护值不相同

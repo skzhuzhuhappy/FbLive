@@ -80,7 +80,7 @@ class GroupsController extends Controller
     {
         $validator = \Validator::make($request->input(), [
             'category_id' => 'required|integer',
-            'area_id' => 'required|integer',
+            //'area_id' => 'required|integer',
         ]);
 
         if ($validator->fails()) {
@@ -89,11 +89,11 @@ class GroupsController extends Controller
         }
         //圈子名称搜索
         if(isset($request->name)&&$request->name){
-            $groups = Groups::where(['category_id'=>$request->category_id,'area_id'=>$request->area_id])
+            $groups = Groups::where(['category_id'=>$request->category_id])
                 ->where('groups.name', 'like', '%' . $request->name . '%')
                 ->orderBy('created_at', 'desc')->get();
         }else{
-            $groups = Groups::where(['category_id'=>$request->category_id,'area_id'=>$request->area_id])
+            $groups = Groups::where(['category_id'=>$request->category_id])
                 ->orderBy('created_at', 'desc')->get();
         }
         return GroupsResource::collection($groups);

@@ -25,7 +25,11 @@ class GroupMembers extends Model
     public static function is_group_auth($group_id)
     {
         $user = Auth::user();
-        return self::is_group_user_id($user->getAuthIdentifier(),$group_id);
+        if($user){
+            return self::is_group_user_id($user->getAuthIdentifier(),$group_id);
+        }else{
+            return false;
+        }
     }
 
     //判断用户是否在圈子中
