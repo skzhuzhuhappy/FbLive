@@ -60,5 +60,23 @@ class Feeds extends Model
 
     }
 
+    //更新 动态点赞数
+    public function updateLikeCount($feed_id){
+        $feed = Feeds::find($feed_id);
+        $feed->like_count = $feed->like_count +1;
+        $feed->save();
+    }
+    //更新 动态评论数
+    public function updateCommentCount($feed_id){
+        $feed = Feeds::find($feed_id);
+        $feed->feed_comment_count = $feed->feed_comment_count +1;
+        $feed->save();
+    }
 
+    //更新 动态阅读数
+    public function updatViewCount($feed_id){
+        $feed = Feeds::find($feed_id);
+        $feed->feed_view_count = $feed->feed_view_count +1;
+        $feed->save();
+    }
 }

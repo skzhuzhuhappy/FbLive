@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Api;
 use App\Http\Requests\Api\FeedReplyRequest;
 use App\Http\Requests\Api\FeedsRequest;
 use App\Http\Resources\Api\FeedsResource;
-use App\Http\Resources\Api\GroupsResource;
 use App\Models\Feeds;
 use App\Models\Groups;
 use App\Transformers\PostTransformer;
@@ -72,9 +71,10 @@ class FeedsController extends Controller
         }
 
         $result['status'] = 1;
+        //创建评论
         Feeds::create($result);
-
-        //(new Groups)->updatePostCount($request->group_id);
+        //更新评论数
+        (new Feeds)->updateLikeCount($request->feed_id);
 
         return $this->setStatusCode(201)->success('添加动态评论成功');
     }
