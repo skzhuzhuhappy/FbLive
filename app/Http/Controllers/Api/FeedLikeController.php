@@ -27,8 +27,8 @@ class FeedLikeController extends Controller
         //新建点赞
         FeedLike::create($result);
 
-        //更新评论数
-        (new Feeds)->updateCommentCount($request->feed_id);
+        //更新动态点赞数
+        (new Feeds)->updateLikeCount($request->feed_id);
 
         return $this->setStatusCode(201)->success('动态点赞成功');
     }

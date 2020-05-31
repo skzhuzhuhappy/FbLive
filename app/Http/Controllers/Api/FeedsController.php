@@ -74,7 +74,7 @@ class FeedsController extends Controller
         //创建评论
         Feeds::create($result);
         //更新评论数
-        (new Feeds)->updateLikeCount($request->feed_id);
+        (new Feeds)->updateCommentCount($request->feed_id);
 
         return $this->setStatusCode(201)->success('添加动态评论成功');
     }

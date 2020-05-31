@@ -20,10 +20,19 @@ class GroupsController extends Controller
 {
 
     //圈子列表
-    public function index()
+    public function index(Request $request)
     {
-        //圈子列表
-        $groups = Groups::where('status','1')->orderBy('created_at', 'desc')->get();
+        $name = $request->name;
+        if($name) {
+            $where[] = ['name', 'like', "%$name%"];
+            $where['status']=1;
+            //圈子列表
+            $groups = Groups::where($where)->orderBy('created_at', 'desc')->get();
+        }else{
+            //圈子列表
+            $groups = Groups::where('status','1')->orderBy('created_at', 'desc')->get();
+        }
+
 
         return GroupsResource::collection($groups);
     }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Requests\Api\UserRequest;
 use App\Http\Resources\Api\UserResource;
 use App\Jobs\Api\SaveLastTokenJob;
+use App\Models\Groups;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -14,10 +15,18 @@ class UserController extends Controller
 {
 
     //返回用户列表
-    public function index()
+    public function index(Request $request)
     {
+        $name = $request->name;
+        if($name) {
+            $where[] = ['name', 'like', "%$name%"];
+            //圈子列表
+            $users = User::where($where)->orderBy('created_at', 'desc')->get();
+        }else{
+            $users = User::paginate(3);
+
+        }
         //3个用户为一页
-        $users = User::paginate(3);
         return UserResource::collection($users);
     }
 
