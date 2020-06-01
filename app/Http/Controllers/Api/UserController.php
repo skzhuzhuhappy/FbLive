@@ -54,7 +54,7 @@ class UserController extends Controller
     public function login(Request $request)
     {
 
-       /* //调用加密
+        //调用加密
         //var_dump($request->password);exit();
         $post_data['password']  = $this->http_request('http://media.fblife.com/encode/password', ['pwd'=>$request->password]);
         //调用登录
@@ -79,7 +79,7 @@ class UserController extends Controller
             }
         }else{
             return $this->failed('账号或密码错误或不存在', 400);
-        }*/
+        }
 
 
 
