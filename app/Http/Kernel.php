@@ -61,7 +61,7 @@ class Kernel extends HttpKernel
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         //'cors'=> \Medz\Cors\Laravel\Middleware\ShouldGroup::class,
-        //'cors'=> \App\Http\Middleware\CrossHttp::class,
+        'cors'=> \App\Http\Middleware\CrossHttp::class,
         'api.refresh'=>\App\Http\Middleware\Api\RefreshTokenMiddleware::class,
         'admin.refresh'=>\App\Http\Middleware\Api\RefreshAdminTokenMiddleware::class,
         'admin.guard'=>\App\Http\Middleware\Api\AdminGuardMiddleware::class,
