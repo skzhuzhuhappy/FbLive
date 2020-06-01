@@ -69,18 +69,18 @@ class UserController extends Controller
             //$userinfo = User::where(['name'=>'guaosi1'])->get();
             if(!$userinfo){
                 $create = $request->all();
+                $create['name'] = $datas['body']['info']['username'];
                 $create['phone'] = $datas['body']['info']['mobile'];
                 $create['avatar'] = $datas['body']['info']['icon'];
                 $create['forum_user_id'] = $datas['body']['info']['uid'];
                 $create['sex'] = $datas['body']['info']['type'];
                 User::create($create);
-                ////var_dump(11111);
             }
         }else{
             return $this->failed('账号或密码错误或不存在', 400);
         }
 
-        $token = Auth::claims(['guard' => 'api'])->attempt(['name' =>$request->name, 'password' => $request->password]);
+        $token = Auth::claims(['guard' => 'api'])->attempt(['name' =>$datas['body']['info']['username'], 'password' => $request->password]);
 
         if ($token) {
             //如果登陆，先检查原先是否有存token，有的话先失效，然后再存入最新的token
