@@ -90,8 +90,6 @@ Route::namespace('Api')->prefix('v1')->group(function () {
             //动态点赞
             Route::post('/feedlike', 'FeedLikeController@store')->name('feeds.store');
 
-
-
         });
 
 
