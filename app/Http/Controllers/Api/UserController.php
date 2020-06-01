@@ -55,7 +55,7 @@ class UserController extends Controller
     {
         //调用加密
         //var_dump($request->password);exit();
-       /* $post_data['password']  = $this->http_request('http://media.fblife.com/encode/password', ['pwd'=>$request->password]);
+        $post_data['password']  = $this->http_request('http://media.fblife.com/encode/password', ['pwd'=>$request->password]);
         //调用登录
         $post_data['username'] = $request->name;
         $post_data['ip'] = $request->ip();
@@ -78,9 +78,7 @@ class UserController extends Controller
             }
         }else{
             return $this->failed('账号或密码错误或不存在', 400);
-        }*/
-
-
+        }
 
         $token = Auth::claims(['guard' => 'api'])->attempt(['name' =>$request->name, 'password' => $request->password]);
 

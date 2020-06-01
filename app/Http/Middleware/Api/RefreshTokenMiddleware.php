@@ -18,19 +18,19 @@ class RefreshTokenMiddleware extends BaseMiddleware
     /**
      * Handle an incoming request.
      *
-     * @param  \Illuminate\Http\Request $request
-     * @param  \Closure $next
-     *
-     * @throws \Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException
+     * @param \Illuminate\Http\Request $request
+     * @param \Closure $next
      *
      * @return mixed
+     * @throws \Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException
+     *
      * @throws TokenInvalidException
      */
     public function handle($request, Closure $next)
     {
 
         // 检查此次请求中是否带有 token，如果没有则抛出异常。
-       //$this->checkForToken($request);
+        $this->checkForToken($request);
 
         //1. 格式通过，验证是否是专属于这个的token
 
@@ -38,7 +38,7 @@ class RefreshTokenMiddleware extends BaseMiddleware
         $present_guard = Auth::getDefaultDriver();
 
         //获取当前token
-        $token=Auth::getToken();
+        $token = Auth::getToken();
         if (empty($token)) {
             throw new TokenInvalidException();
         }
@@ -46,7 +46,7 @@ class RefreshTokenMiddleware extends BaseMiddleware
         $payload = Auth::manager()->getJWTProvider()->decode($token->get());
         //如果不包含guard字段或者guard所对应的值与当前的guard守护值不相同
         //证明是不属于当前guard守护的token
-        if(empty($payload['guard'])||$payload['guard']!=$present_guard){
+        if (empty($payload['guard']) || $payload['guard'] != $present_guard) {
             throw new TokenInvalidException();
         }
         //使用 try 包裹，以捕捉 token 过期所抛出的 TokenExpiredException  异常
@@ -67,7 +67,7 @@ class RefreshTokenMiddleware extends BaseMiddleware
 
                 //刷新了token，将token存入数据库
                 $user = Auth::user();
-                SaveLastTokenJob::dispatch($user,$token);
+                SaveLastTokenJob::dispatch($user, $token);
 
             } catch (JWTException $exception) {
                 // 如果捕获到此异常，即代表 refresh 也过期了，用户无法刷新令牌，需要重新登录。
