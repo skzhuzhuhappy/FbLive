@@ -69,8 +69,12 @@ class UserController extends Controller
             //$userinfo = User::where(['name'=>'guaosi1'])->get();
             if(!$userinfo){
                 $create = $request->all();
-                $create['name'] = $datas['body']['info']['username'];
-                $create['phone'] = $datas['body']['info']['mobile'];
+                if(!empty($datas['body']['info']['username'])){
+                    $create['name'] = $datas['body']['info']['username'];
+                }
+                if(!empty($datas['body']['info']['mobile'])){
+                    $create['phone'] = $datas['body']['info']['mobile'];
+                }
                 $create['avatar'] = $datas['body']['info']['icon'];
                 $create['forum_user_id'] = $datas['body']['info']['uid'];
                 $create['sex'] = $datas['body']['info']['type'];
