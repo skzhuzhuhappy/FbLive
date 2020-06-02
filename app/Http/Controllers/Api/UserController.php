@@ -72,7 +72,8 @@ class UserController extends Controller
                 if(!empty($datas['body']['info']['username'])){
                     $create['name'] = $datas['body']['info']['username'];
                 }
-                if(!empty($datas['body']['info']['mobile'])){
+
+                if(!empty($datas['body']['info']['mobile']) && $datas['body']['info']['mobile'] != 'null'){
                     $create['phone'] = $datas['body']['info']['mobile'];
                 }
                 $create['avatar'] = $datas['body']['info']['icon'];
