@@ -14,8 +14,6 @@ class Controller extends BaseController
     // 其他通用的Api帮助函数
 
 
-
-
     function send_post($url, $content, $header = [])
     {
         $ch = curl_init();
@@ -117,9 +115,6 @@ class Controller extends BaseController
     }
 
 
-
-
-
     public static function save_base64($base64_img)
     {
         //保存图片
@@ -135,11 +130,135 @@ class Controller extends BaseController
         $is_true = Storage::disk('group')->put($new_file, $base64_img);
         //存储图片
         if ($is_true) {
-           $new_file = config('filesystems.disks.group.url').$new_file;
-           return $new_file;
+            $new_file = config('filesystems.disks.group.url') . $new_file;
+            return $new_file;
         }
     }
 
+
+    function fb_login($name, $pwd)
+    {
+
+        $data['username'] = $name;
+        $pwd = $this->encodePassword($pwd);
+        var_dump($pwd);
+        exit();
+
+        $login_url = 'http://gw.fblife.com/bbs/api/user/login';//用户登录接口
+        $data['password'] = $pwd;
+        $data['reqTime'] = time();//此参数必传
+        $sign = $this->createToken($data);
+        $data['sign'] = $sign;
+        $res = $this->post_json_ssl($login_url, $data);
+        return $res;
+    }
+
+    #生成 token
+    public function createToken($allParam)
+    {
+        if (isset($allParam['systemParameterInfo']['reqTime'])) {
+            $reqTime = $allParam['systemParameterInfo']['reqTime'];
+        } else {
+            $reqTime = $allParam['reqTime'];
+        }
+        $newArr = array();
+        ksort($allParam);
+        asort($allParam, 2);
+
+        foreach ($allParam as $key => $val) {
+
+            if (is_array($val)) {
+
+                //修改如果数组里没有给KEY值的情况,如果这种情况把整个数组当做一个字符来处理
+                if (isset($val[0])) {
+
+                    $allParam[$key] = "";//json_encode(json_encode($val));
+                    //$allParam[$key] = substr( $allParam[$key], 1, strlen($allParam[$key])-2 );
+                } else {
+                    $allParam[$key] = $this->getArraySortString($val);
+                }
+
+                if (is_array($allParam[$key])) {
+
+
+                    $allParam[$key] = $this->getArraySortString($allParam[$key], 2);
+
+                }
+            } else {
+                $allParam[$key] = strval($val);
+            }
+        }
+
+
+        asort($allParam, 2);
+        $sortKeys = $this->bubble_sort_keys($allParam);
+
+        foreach ($sortKeys as $key => $value) {
+            $newArr[$value] = $allParam[$value];
+        }
+        $allParam = $newArr;
+
+        $sign_str = '';
+        $arr_str = "";
+        foreach ($allParam as $key => $val) {
+
+            if ($key != 'sign') {
+
+                $sign_str .= $key . '=' . $val . "&";
+            }
+        }
+
+        if (substr($sign_str, -1) == "&") {
+
+            $sign_str = substr($sign_str, 0, strlen($sign_str) - 1);
+        }
+
+        $keyIndex = $this->privateKeyIndex[gmdate('w', substr($reqTime, 0, 10))];
+        //echo $sign_str . "&private_key=" . $this->priviteKey[$keyIndex];exit;
+        return md5($sign_str . "&private_key=" . $this->priviteKey[$keyIndex]);
+    }
+
+
+    function post_json_ssl($url = '', $arr = null)
+    {
+        if (empty($url) || empty($arr)) {
+            return false;
+        }
+        $data_string = json_encode($arr);
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0); // 对认证证书来源的检查
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0); // 从证书中检查SSL加密算法是否存在
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+                'Content-Type:application/json;charset=utf-8',
+                'Content-Length:' . strlen($data_string)
+            )
+        );
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        $result = curl_exec($ch);
+        curl_close($ch);
+        return $result;
+    }
+
+    //密码加密
+    function encodePassword($input, $key="com.fblife.app") {
+        $key=md5($key);
+        $key=substr($key, 0,16);
+        $size = mcrypt_get_block_size(MCRYPT_RIJNDAEL_128, MCRYPT_MODE_ECB);
+        $pad = $size - (strlen($input) % $size);
+        $input = $input . str_repeat(chr($pad), $pad);
+        $td = mcrypt_module_open(MCRYPT_RIJNDAEL_128, '', MCRYPT_MODE_ECB, '');
+        $iv = mcrypt_create_iv (mcrypt_enc_get_iv_size($td), MCRYPT_RAND);
+        mcrypt_generic_init($td, $key, $iv);
+        $data = mcrypt_generic($td, $input);
+        mcrypt_generic_deinit($td);
+        mcrypt_module_close($td);
+        $data = base64_encode($data);
+        return $data;
+    }
 
 
 }

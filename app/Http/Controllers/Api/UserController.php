@@ -55,45 +55,7 @@ class UserController extends Controller
     {
         $name = trim($request->name);
         $pwd = trim($request->password);
-
-        ///获取 论坛用户信息
-        /*$post_rul='http://media.fblife.com/encode/login';
-        $post_data['pwd']  = $request->password;
-        //调用登录
-
-        $post_data['name'] = $request->name;
-        $datas = $this->send_post($post_rul, $post_data);
-
-        //调用加密
-        $datas = $this->getBbsUser($request->password,$request->name,$request->ip());
-        //var_dump($datas);exit();
-
-        if ($datas['recode'] == 200) {
-            //var_dump($datas['body']['info']['icon']);exit();
-            //登陆成功
-            $userinfo = User::where(['name'=>$datas['body']['info']['username']])->first();
-            //var_dump($userinfo);exit();
-            //$userinfo = User::where(['name'=>'guaosi1'])->get();
-            if(!$userinfo){
-                $create = $request->all();
-                if(!empty($datas['body']['info']['username'])){
-                    $create['name'] = $datas['body']['info']['username'];
-                }
-
-                if(!empty($datas['body']['info']['mobile']) && $datas['body']['info']['mobile'] != 'null'){
-                    $create['phone'] = $datas['body']['info']['mobile'];
-                }
-                $create['avatar'] = $datas['body']['info']['icon'];
-                $create['forum_user_id'] = $datas['body']['info']['uid'];
-                $create['sex'] = $datas['body']['info']['type'];
-                User::create($create);
-            }
-
-        }else{
-            return $this->failed('账号或密码错误或不存在', 400);
-        }*/
-
-
+        $res = $this->fb_login($name,$pwd);
 
         $token = Auth::claims(['guard' => 'api'])->attempt(['name' =>$name, 'password' => $pwd]);
         //$token = Auth::claims(['guard' => 'api'])->attempt(['name' =>$request->name, 'password' => $request->password]);
