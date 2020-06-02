@@ -71,4 +71,55 @@ class Controller extends BaseController
         return $output;
     }
 
+    function getBbsUser($pwd,$name,$ip,$type=1,$post_rul='https://fb-cms.fblife.com/api/web/user/login',$pwd_url='http://media.fblife.com/encode/password'){
+
+        $post_data['password']  = $this->http_request($pwd_url, ['pwd'=>$pwd]);
+        //调用登录
+        if($type == 1){
+            $post_data['username'] = $name;
+            $post_data['ip'] = $ip;
+        }
+        //$post_data['username'] = $name;
+        //$post_data['ip'] = $ip;
+        $post_data['name'] = $name;
+        var_dump($post_data);
+        $datas = $this->send_post($post_rul, $post_data);
+        var_dump($datas);exit();
+
+        switch ($type){
+            case 1:
+                if ($datas['recode'] == 200) {
+                    $res = array();
+                    $res['name'] = $datas['body']['info']['username'];
+                    if(!empty($datas['body']['info']['mobile']) && $datas['body']['info']['mobile'] != 'null'){
+                        $res['phone'] = $datas['body']['info']['mobile'];
+                    }
+                    $res['avatar'] = $datas['body']['info']['icon'];
+                    $res['forum_user_id'] = $datas['body']['info']['uid'];
+                    $res['sex'] = $datas['body']['info']['type'];
+                    $res['token'] = $datas['body']['info']['token'];
+
+                    return $res;
+                }
+                break;
+            case 2:
+                if ($datas['resInfo']['rspCode'] == 1000) {
+                    $res = array();
+                    $res['name'] = $datas['rspData']['username'];
+                    if(!empty($datas['rspData']['mobile']) && $datas['rspData']['mobile'] != 'null'){
+                        $res['phone'] = $datas['rspData']['mobile'];
+                    }
+                    $res['avatar'] = $datas['rspData']['middlePortrait'];
+                    $res['forum_user_id'] = $datas['rspData']['uid'];
+                    $res['sex'] = 1;
+                    $res['token'] = $datas['rspData']['token'];
+                    return $res;
+                }
+                break;
+            default;
+        }
+
+    }
+
+
 }

@@ -53,14 +53,19 @@ class UserController extends Controller
     //用户登录
     public function login(Request $request)
     {
-        //调用加密
-        //var_dump($request->password);exit();
-        $post_data['password']  = $this->http_request('http://media.fblife.com/encode/password', ['pwd'=>$request->password]);
+
+        ///获取 论坛用户信息
+        /*$post_rul='http://media.fblife.com/encode/login';
+        $post_data['pwd']  = $request->password;
         //调用登录
-        $post_data['username'] = $request->name;
-        $post_data['ip'] = $request->ip();
-        $datas = $this->send_post("https://fb-cms.fblife.com/api/web/user/login", $post_data);
-        ///var_dump($datas);
+
+        $post_data['name'] = $request->name;
+        $datas = $this->send_post($post_rul, $post_data);
+
+        //调用加密
+        $datas = $this->getBbsUser($request->password,$request->name,$request->ip());
+        //var_dump($datas);exit();
+
         if ($datas['recode'] == 200) {
             //var_dump($datas['body']['info']['icon']);exit();
             //登陆成功
@@ -81,11 +86,13 @@ class UserController extends Controller
                 $create['sex'] = $datas['body']['info']['type'];
                 User::create($create);
             }
+
         }else{
             return $this->failed('账号或密码错误或不存在', 400);
-        }
+        }*/
 
-        $token = Auth::claims(['guard' => 'api'])->attempt(['name' =>$datas['body']['info']['username'], 'password' => $request->password]);
+
+        $token = Auth::claims(['guard' => 'api'])->attempt(['name' =>$request->name, 'password' => $request->password]);
         //$token = Auth::claims(['guard' => 'api'])->attempt(['name' =>$request->name, 'password' => $request->password]);
 
         if ($token) {
@@ -108,6 +115,9 @@ class UserController extends Controller
         }
 
         return $this->failed('账号或密码错误或不存在', 400);
+
+
+
     }
 
     //用户退出
