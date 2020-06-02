@@ -54,15 +54,8 @@ class GroupsController extends Controller
     public function categorysIndex()
     {
 
-        //$category_list = Groups::select('category_id')->get()->Toarray();
-        //$category_id_list = array_unique(array_column($category_list,'category_id'));
-        //->whereIn('id', $category_id_list)
         $categorys = GroupCategories::where(['status'=>0,'parent_id'=>0])->orderBy('level', 'asc')->get();
-        //var_dump($categorys);exit();
-       /* foreach ($categorys as $category){
-            $categorys['category'] = $category->children;
-        }*/
-        //var_dump($categorys);exit();
+        
         return GroupCategoriesResource::collection($categorys);
     }
 

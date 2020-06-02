@@ -62,14 +62,14 @@ class FeedsController extends Controller
     {
 
         $result = $request->all();
-        $user = Auth::user();
+      /*  $user = Auth::user();
         if (!$user) {
             return $this->failed('未获得用户，检查token', 402);
         }
 
         if ($result['user_id'] != $user->getAuthIdentifier()) {
             return $this->failed('传入user_id 不是当前登陆用户', 402);
-        }
+        }*/
 
         $result['pid'] = 1;
         $result['status'] = 1;
@@ -100,14 +100,15 @@ class FeedsController extends Controller
         return FeedsResource::collection($feed_list);
     }
 
-
     //圈子下的动态列表
     public function groupIndex($id)
     {
-        $feed_list = Feeds::feedList(['group_id'=>$id],2);
+        $feed_list = Feeds::feedList(['group_id'=>$id,'pid'=>0],2);
         //->paginate()
         return FeedsResource::collection($feed_list);
     }
+
+
 
 
 }
