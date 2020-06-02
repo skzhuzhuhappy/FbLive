@@ -62,15 +62,14 @@ class FeedsController extends Controller
     {
 
         $result = $request->all();
-      /*  $user = Auth::user();
+        $user = Auth::user();
         if (!$user) {
             return $this->failed('未获得用户，检查token', 402);
         }
-
-        if ($result['user_id'] != $user->getAuthIdentifier()) {
+       /* if ($result['user_id'] != $user->getAuthIdentifier()) {
             return $this->failed('传入user_id 不是当前登陆用户', 402);
         }*/
-
+        $result['user_id'] = $user->getAuthIdentifier();
         $result['pid'] = 1;
         $result['status'] = 1;
         //创建评论
