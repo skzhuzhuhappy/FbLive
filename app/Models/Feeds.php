@@ -49,9 +49,9 @@ class Feeds extends Model
     //查询动态
     public static function feedList($data, $num = 0)
     {
-        $data['feed_id'] = 0;
+
+        $data['pid'] = 0;
         $data['status'] = 1;
-        //var_dump($wb);exit();
         if ($num) {
             return self::where($data)->orderBy('created_at', 'desc')->paginate($num);
         } else {

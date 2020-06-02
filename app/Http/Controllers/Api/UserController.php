@@ -53,6 +53,8 @@ class UserController extends Controller
     //用户登录
     public function login(Request $request)
     {
+        $name = trim($request->name);
+        $pwd = trim($request->password);
 
         ///获取 论坛用户信息
         /*$post_rul='http://media.fblife.com/encode/login';
@@ -92,7 +94,8 @@ class UserController extends Controller
         }*/
 
 
-        $token = Auth::claims(['guard' => 'api'])->attempt(['name' =>$request->name, 'password' => $request->password]);
+
+        $token = Auth::claims(['guard' => 'api'])->attempt(['name' =>$name, 'password' => $pwd]);
         //$token = Auth::claims(['guard' => 'api'])->attempt(['name' =>$request->name, 'password' => $request->password]);
 
         if ($token) {
