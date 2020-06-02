@@ -55,7 +55,7 @@ class UserController extends Controller
     {
         $name = trim($request->name);
         $pwd = trim($request->password);
-        $res = $this->fb_login($name,$pwd);
+        //$res = $this->fb_login($name,$pwd);
 
         $token = Auth::claims(['guard' => 'api'])->attempt(['name' =>$name, 'password' => $pwd]);
         //$token = Auth::claims(['guard' => 'api'])->attempt(['name' =>$request->name, 'password' => $request->password]);
