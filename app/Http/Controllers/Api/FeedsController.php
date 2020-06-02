@@ -71,6 +71,7 @@ class FeedsController extends Controller
             return $this->failed('传入user_id 不是当前登陆用户', 402);
         }
 
+        $result['pid'] = 1;
         $result['status'] = 1;
         //创建评论
         Feeds::create($result);

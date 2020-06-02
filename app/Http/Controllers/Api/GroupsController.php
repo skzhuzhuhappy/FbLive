@@ -144,7 +144,7 @@ class GroupsController extends Controller
         //var_dump($result);exit();
         $result['img_top'] =  $this::save_base64($request->img_top);
 
-        
+
 
         $result['user_id'] = $user->getAuthIdentifier();
         $result['status'] = 1;
