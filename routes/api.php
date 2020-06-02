@@ -23,6 +23,11 @@ Route::namespace('Api')->prefix('v1')->group(function () {
         Route::get('foo', function () {
             return 'Hello World';
         });
+
+        //测试跨域问题
+        Route::get('phpinfo', function () {
+            echo phpinfo();
+        });
         //圈子详情
         Route::get('/groups/{id}', 'GroupsController@show')->name('groups.show');
 
