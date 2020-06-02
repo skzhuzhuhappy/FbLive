@@ -129,18 +129,23 @@ class GroupsController extends Controller
 
         if (!$request->file('img_top')->isValid()) {
             return $this->failed('img_top 不存在',402);
-        }
+        }*/
 
-        $img_head_path = $request->img_head->store('images');
-        $img_top_path = $request->img_top->store('images');
 
-        $result['img_head'] = $img_head_path;
-        $result['img_top'] = $img_top_path;*/
+
 
         $user = Auth::user();
         if(!$user){
             return $this->failed('未获得用户，检查token',402);
         }
+
+
+        $result['img_head'] = $this::save_base64($request->img_head);
+        //var_dump($result);exit();
+        $result['img_top'] =  $this::save_base64($request->img_top);
+
+        
+
         $result['user_id'] = $user->getAuthIdentifier();
         $result['status'] = 1;
         $result['users_count'] = 1;
@@ -148,7 +153,6 @@ class GroupsController extends Controller
         if(!$group){
             return $this->failed('圈子创建失败',402);
         }
-
         //加入圈子
         $res_mem['group_id'] = $group->id;
         $res_mem['group_id'] = $group->id;

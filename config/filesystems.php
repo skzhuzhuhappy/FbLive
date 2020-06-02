@@ -55,6 +55,13 @@ return [
             'visibility' => 'public',
         ],
 
+        'group' => [
+            'driver' => 'local',
+            'root' => public_path('images/groups'),
+            'url' => env('APP_URL').'images/groups/',
+            'visibility' => 'public',
+        ],
+
         's3' => [
             'driver' => 's3',
             'key' => env('AWS_ACCESS_KEY_ID'),

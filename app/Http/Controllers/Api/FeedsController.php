@@ -42,6 +42,7 @@ class FeedsController extends Controller
         //var_dump($result);exit();
         //圈子添加动态权限
         $group = Groups::where('id',$result['group_id'])->value('feed_status');
+
         if($group){
             $result['status'] = 0;
         }else{

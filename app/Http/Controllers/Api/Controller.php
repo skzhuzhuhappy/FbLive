@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Api\Helpers\ApiResponse;
 use App\Http\Controllers\Controller as BaseController;
-
+use Illuminate\Support\Facades\Storage;
 
 class Controller extends BaseController
 {
@@ -61,7 +61,7 @@ class Controller extends BaseController
         curl_setopt($curl, CURLOPT_URL, $url);
         curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, FALSE);
         curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, FALSE);
-        if (!empty($data)){
+        if (!empty($data)) {
             curl_setopt($curl, CURLOPT_POST, 1);
             curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
         }
@@ -71,27 +71,27 @@ class Controller extends BaseController
         return $output;
     }
 
-    function getBbsUser($pwd,$name,$ip,$type=1,$post_rul='https://fb-cms.fblife.com/api/web/user/login',$pwd_url='http://media.fblife.com/encode/password'){
+    function getBbsUser($pwd, $name, $ip, $type = 1, $post_rul = 'https://fb-cms.fblife.com/api/web/user/login', $pwd_url = 'http://media.fblife.com/encode/password')
+    {
 
-        $post_data['password']  = $this->http_request($pwd_url, ['pwd'=>$pwd]);
+        $post_data['password'] = $this->http_request($pwd_url, ['pwd' => $pwd]);
         //调用登录
-        if($type == 1){
+        if ($type == 1) {
             $post_data['username'] = $name;
             $post_data['ip'] = $ip;
         }
         //$post_data['username'] = $name;
         //$post_data['ip'] = $ip;
         $post_data['name'] = $name;
-        var_dump($post_data);
-        $datas = $this->send_post($post_rul, $post_data);
-        var_dump($datas);exit();
 
-        switch ($type){
+        $datas = $this->send_post($post_rul, $post_data);
+
+        switch ($type) {
             case 1:
                 if ($datas['recode'] == 200) {
                     $res = array();
                     $res['name'] = $datas['body']['info']['username'];
-                    if(!empty($datas['body']['info']['mobile']) && $datas['body']['info']['mobile'] != 'null'){
+                    if (!empty($datas['body']['info']['mobile']) && $datas['body']['info']['mobile'] != 'null') {
                         $res['phone'] = $datas['body']['info']['mobile'];
                     }
                     $res['avatar'] = $datas['body']['info']['icon'];
@@ -106,7 +106,18 @@ class Controller extends BaseController
                 if ($datas['resInfo']['rspCode'] == 1000) {
                     $res = array();
                     $res['name'] = $datas['rspData']['username'];
-                    if(!empty($datas['rspData']['mobile']) && $datas['rspData']['mobile'] != 'null'){
+                    $request = Request::instance();
+                    $data['username'] = $request->post('name', '');;
+                    $data['password'] = $request->post('pwd', '');
+                    $login_url = 'http://gw.fblife.com/bbs/api/user/login';//用户登录接口
+                    $data['password'] = $this->encodePassword($data['password']);//加密用户密码
+                    $data['reqTime'] = time();//此参数必传
+                    $sign = $this->createToken($data);
+                    $data['sign'] = $sign;
+                    $res = $this->post_json_ssl($login_url, $data);
+                    return $res;
+
+                    if (!empty($datas['rspData']['mobile']) && $datas['rspData']['mobile'] != 'null') {
                         $res['phone'] = $datas['rspData']['mobile'];
                     }
                     $res['avatar'] = $datas['rspData']['middlePortrait'];
@@ -121,5 +132,55 @@ class Controller extends BaseController
 
     }
 
+
+    public function login_url($name, $pwd)
+    {
+        $data['username'] = $name;
+        $data['password'] = $pwd;
+        $login_url = 'http://gw.fblife.com/bbs/api/user/login';//用户登录接口
+        $data['password'] = $this->encodePassword($data['password']);//加密用户密码
+        $data['reqTime'] = time();//此参数必传
+        $sign = $this->createToken($data);
+        $data['sign'] = $sign;
+        $res = $this->post_json_ssl($login_url, $data);
+        return $res;
+
+    }
+
+    public static function save_base64($base64_img)
+    {
+        //保存图片
+        preg_match('/^(data:\s*image\/(\w+);base64,)/', $base64_img, $res);
+
+        $new_file = '' . date('Ym', time()) . '/';
+        //获取图片类型
+        $type = $res[2];
+        $new_file = $new_file . str_random(10) . mt_rand(10000, 99999) . '.' . $type;
+        $base64_img = base64_decode(str_replace($res[1], '', $base64_img));
+        //存储图片
+
+        $is_true = Storage::disk('group')->put($new_file, $base64_img);
+        //存储图片
+        if ($is_true) {
+           $new_file = config('filesystems.disks.group.url').$new_file;
+           return $new_file;
+        }
+    }
+
+    public function uploadImg($base64)
+    {
+        //dd($base64);
+        //分隔三部分，data:image/png  base64  编码内容
+        $arr = preg_split("/(,|;)/",$base64);
+        $base64Data = $arr[2];
+        //分割出图片格式
+        $arr2 = explode('/',$arr[0]);
+        $type = $arr2[1];
+        //拼接图片名称
+        $fileName = 'picture.'.$type;
+        $istrue = file_put_contents($fileName,base64_decode($base64Data));
+        return $istrue;
+
+    }
 
 }
