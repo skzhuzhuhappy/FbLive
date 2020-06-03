@@ -48,8 +48,7 @@ Route::namespace('Api')->prefix('v1')->group(function () {
          * */
 
 
-        //圈子列表
-        Route::get('/groups', 'GroupsController@index')->name('groups.index');
+
         //类型 地点 下的圈子
         Route::get('/catearea/groups', 'GroupsController@cateareaIndex')->name('catearea.groups.index');
         //圈子的类型列表
@@ -72,9 +71,10 @@ Route::namespace('Api')->prefix('v1')->group(function () {
         //动态详情
         Route::get('/feeds/{id}', 'FeedsController@show')->name('feeds.show');
 
+        //需要登陆认证的接口
         Route::middleware('api.refresh')->group(function () {
 
-            //登陆用户加入的圈子列表
+            //登陆用户创建的所有圈子
             Route::get('/user/groups', 'GroupsController@userIndex')->name('user.groups.index');
             //新建圈子
             Route::post('/groups', 'GroupsController@store')->name('groups.store');
@@ -96,6 +96,12 @@ Route::namespace('Api')->prefix('v1')->group(function () {
             Route::post('/feedlike', 'FeedLikeController@store')->name('feeds.store');
 
         });
+
+        //分类下圈子列表
+        Route::get('/categories/{id}/groups', 'CategoryController@groupsIndex')->name('categories.groups.index');
+        //全部圈子列表
+        Route::get('/groups', 'GroupsController@index')->name('groups.index');
+
 
 
     });

@@ -26,6 +26,7 @@ class Feeds extends Model
         'feed_content',
         'text_body',
         'status',
+        'pid',
     ];
 
     public function user()

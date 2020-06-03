@@ -33,11 +33,10 @@ class GroupsController extends Controller
             $groups = Groups::where('status','1')->orderBy('created_at', 'desc')->get();
         }
 
-
         return GroupsResource::collection($groups);
     }
 
-    //登陆用户下所有圈子
+    //陆用户创建的所有圈子
     public function userIndex()
     {
         $user = Auth::user();
@@ -55,7 +54,7 @@ class GroupsController extends Controller
     {
 
         $categorys = GroupCategories::where(['status'=>0,'parent_id'=>0])->orderBy('level', 'asc')->get();
-        
+
         return GroupCategoriesResource::collection($categorys);
     }
 
