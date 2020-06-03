@@ -53,11 +53,24 @@ class UserController extends Controller
     //用户登录
     public function login(Request $request)
     {
+
         $name = trim($request->name);
         $pwd = trim($request->password);
-        //$res = $this->fb_login($name,$pwd);
+        $res = $this->getBbsUser($name,$pwd,2,'http://media.fblife.com/encode/login');
 
-        $token = Auth::claims(['guard' => 'api'])->attempt(['name' =>$name, 'password' => $pwd]);
+        if (!empty($res)) {
+            //登陆成功
+            $userinfo = User::where(['name'=>$res['name']])->first();
+            if(!$userinfo){
+                $res['password'] = $pwd;
+                User::create($res);
+            }
+        }else{
+            return $this->failed('账号或密码错误或不存在', 400);
+        }
+
+        
+        $token = Auth::claims(['guard' => 'api'])->attempt(['name' =>$res['name'], 'password' => $pwd]);
         //$token = Auth::claims(['guard' => 'api'])->attempt(['name' =>$request->name, 'password' => $request->password]);
 
         if ($token) {
