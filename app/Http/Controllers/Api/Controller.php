@@ -63,8 +63,6 @@ class Controller extends BaseController
             $post_data['username'] = $name;
         }
 
-
-
         $datas = $this->send_post($post_rul, $post_data);
 
         switch ($type) {

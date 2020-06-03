@@ -18,11 +18,11 @@ class UserController extends Controller
     public function index(Request $request)
     {
         $name = $request->name;
-        if($name) {
+        if ($name) {
             $where[] = ['name', 'like', "%$name%"];
             //圈子列表
             $users = User::where($where)->orderBy('created_at', 'desc')->get();
-        }else{
+        } else {
             $users = User::paginate(3);
 
         }
@@ -53,24 +53,24 @@ class UserController extends Controller
     //用户登录
     public function login(Request $request)
     {
-
         $name = trim($request->name);
         $pwd = trim($request->password);
-        $res = $this->getBbsUser($name,$pwd,2,'http://media.fblife.com/encode/login');
+
+        $res = $this->getBbsUser($name, $pwd, 2, 'http://media.fblife.com/encode/login');
 
         if (!empty($res)) {
             //登陆成功
-            $userinfo = User::where(['name'=>$res['name']])->first();
-            if(!$userinfo){
+            $userinfo = User::where(['name' => $res['name']])->first();
+            if (!$userinfo) {
                 $res['password'] = $pwd;
                 User::create($res);
             }
-        }else{
+        } else {
             return $this->failed('账号或密码错误或不存在', 400);
         }
 
+        $token = Auth::claims(['guard' => 'api'])->attempt(['name' => $res['name'], 'password' => $pwd]);
 
-        $token = Auth::claims(['guard' => 'api'])->attempt(['name' =>$res['name'], 'password' => $pwd]);
         //$token = Auth::claims(['guard' => 'api'])->attempt(['name' =>$request->name, 'password' => $request->password]);
 
         if ($token) {

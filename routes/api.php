@@ -49,7 +49,6 @@ Route::namespace('Api')->prefix('v1')->group(function () {
          * */
 
 
-
         //类型 地点 下的圈子
         Route::get('/catearea/groups', 'GroupsController@cateareaIndex')->name('catearea.groups.index');
         //圈子的类型列表
@@ -99,14 +98,15 @@ Route::namespace('Api')->prefix('v1')->group(function () {
         });
 
 
-        //分类下圈子列表
+      /*  //分类下圈子列表
         Route::get('/categories/{id}/groups', 'CategoryController@groupsIndex')->name('categories.groups.index');
         //全部圈子列表
-        Route::get('/groups', 'GroupsController@index')->name('groups.index');
+        Route::get('/groups', 'GroupsController@index')->name('groups.index');*/
 
 
 
     });
+
 
     Route::middleware('admin.guard')->group(function () {
         //管理员注册
