@@ -69,7 +69,7 @@ class UserController extends Controller
             return $this->failed('账号或密码错误或不存在', 400);
         }
 
-        
+
         $token = Auth::claims(['guard' => 'api'])->attempt(['name' =>$res['name'], 'password' => $pwd]);
         //$token = Auth::claims(['guard' => 'api'])->attempt(['name' =>$request->name, 'password' => $request->password]);
 
@@ -90,6 +90,7 @@ class UserController extends Controller
                 'token_end_time' => $token_time,
                 'user_id' => $user->getAuthIdentifier(),
             ]);
+
         }
 
         return $this->failed('账号或密码错误或不存在', 400);
