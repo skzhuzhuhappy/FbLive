@@ -14,6 +14,7 @@ use Illuminate\Http\Request;
 */
 
 Route::namespace('Api')->prefix('v1')->group(function () {
+
     Route::middleware('api.guard')->group(function () {
         //用户注册
         Route::post('/users', 'UserController@store')->name('users.store');
@@ -96,6 +97,7 @@ Route::namespace('Api')->prefix('v1')->group(function () {
             Route::post('/feedlike', 'FeedLikeController@store')->name('feeds.store');
 
         });
+
 
         //分类下圈子列表
         Route::get('/categories/{id}/groups', 'CategoryController@groupsIndex')->name('categories.groups.index');

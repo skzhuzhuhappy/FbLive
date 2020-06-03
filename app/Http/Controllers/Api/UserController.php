@@ -95,8 +95,6 @@ class UserController extends Controller
 
         return $this->failed('账号或密码错误或不存在', 400);
 
-
-
     }
 
     //用户退出

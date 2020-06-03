@@ -102,8 +102,7 @@ class FeedsController extends Controller
     //圈子下的动态列表
     public function groupIndex($id)
     {
-        $feed_list = Feeds::feedList(['group_id'=>$id,'pid'=>0],2);
-        //->paginate()
+        $feed_list = Feeds::feedList(['group_id'=>$id],2);
         return FeedsResource::collection($feed_list);
     }
 

@@ -50,7 +50,6 @@ class Feeds extends Model
     //查询动态
     public static function feedList($data, $num = 0)
     {
-
         $data['pid'] = 0;
         $data['status'] = 1;
         if ($num) {
