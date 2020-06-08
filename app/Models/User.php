@@ -59,7 +59,11 @@ class User extends Authenticatable implements JWTSubject
     {
         return $this->hasMany(Feeds::class);
     }
-
+    //关联 groupMember
+    public function groupMembers()
+    {
+        return $this->hasMany(GroupMembers::class,'user_id','id');
+    }
 
 
 }

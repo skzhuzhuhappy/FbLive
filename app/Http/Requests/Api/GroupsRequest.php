@@ -21,9 +21,14 @@ class GroupsRequest extends FormRequest
                         'name' => ['required', 'max:12', 'unique:groups,name'],
                         'category_id' => ['required','integer'],
                         'area_id' => ['required','integer'],
-                        //'node' => ['required',['between'=>1,3]],
-                        'node' => ['required'],
+                        'node' => ['required','Integer','between:1,3'],
                         'summary' => ['required','string'],
+
+                        'publish_permission' => ['Integer','between:1,3'],
+                        'join_permission' => ['Integer','between:1,2'],
+                        'feed_status' => ['Integer','between:0,1'],
+                        'visible' => ['Integer','between:0,1'],
+                        'status' => ['Integer','between:0,2'],
                     ];
                 }
             case 'PUT':

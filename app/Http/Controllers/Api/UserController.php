@@ -57,7 +57,7 @@ class UserController extends Controller
         $pwd = trim($request->password);
 
         $res = $this->getBbsUser($name, $pwd, 2, 'http://media.fblife.com/encode/login');
-
+        //ar_dump($res);exit();
         if (!empty($res)) {
             //登陆成功
             $userinfo = User::where(['name' => $res['name']])->first();

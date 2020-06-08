@@ -29,8 +29,6 @@ Route::namespace('Api')->prefix('v1')->group(function () {
         Route::get('phpinfo', function () {
             echo phpinfo();
         });
-        //圈子详情
-        Route::get('/groups/{id}', 'GroupsController@show')->name('groups.show');
 
         Route::middleware('api.refresh')->group(function () {
             //当前用户信息
@@ -47,7 +45,10 @@ Route::namespace('Api')->prefix('v1')->group(function () {
         /*
          * 圈子相关路由
          * */
-
+        //全部圈子列表
+        Route::get('/groups', 'GroupsController@index')->name('groups.index');
+        //圈子详情
+        Route::get('/groups/{id}', 'GroupsController@show')->name('groups.show');
 
         //类型 地点 下的圈子
         Route::get('/catearea/groups', 'GroupsController@cateareaIndex')->name('catearea.groups.index');
@@ -60,7 +61,6 @@ Route::namespace('Api')->prefix('v1')->group(function () {
         //某个用户下的圈子列表
         Route::get('/user/groups/{id}', 'GroupsController@useridIndex')->name('userId.groups.index');
 
-
         //圈子的动态列表
         Route::get('/feeds/group/{id}', 'FeedsController@groupIndex')->name('feeds.group.index');
         //所有圈子的所有动态
@@ -70,6 +70,17 @@ Route::namespace('Api')->prefix('v1')->group(function () {
         Route::get('/feeds/user/{id}', 'FeedsController@userIndex')->name('feeds.user.index');
         //动态详情
         Route::get('/feeds/{id}', 'FeedsController@show')->name('feeds.show');
+
+        //新增
+        //检测圈子名称 是否可用
+        Route::post('/group/name','GroupsController@nameIndex')->name('groups.name.index');
+        //圈子下的用户管理列表
+        Route::get('/groups/group_member/{id}', 'GroupsController@groupMemberList')->name('groups.group_member.list');
+        //  审核加入圈子用户列表
+        Route::post('/group/group_member/status','GroupsController@groupMemberStatus')->name('groups.group_member.status');
+
+
+
 
         //需要登陆认证的接口
         Route::middleware('api.refresh')->group(function () {
@@ -89,7 +100,10 @@ Route::namespace('Api')->prefix('v1')->group(function () {
 
             //发布动态
             Route::post('/feeds', 'FeedsController@store')->name('feeds.store');
-
+            //审核动态操作
+            Route::post('/feeds/update', 'FeedsController@update')->name('feeds.update');
+            //删除动态评论
+            Route::delete('/feeds/reply/delete', 'FeedsController@replyDelete')->name('feeds.delete');
             //添加动态评论
             Route::post('/feeds/reply', 'FeedsController@reply')->name('feeds.reply');
             //动态点赞
@@ -100,8 +114,7 @@ Route::namespace('Api')->prefix('v1')->group(function () {
 
       /*  //分类下圈子列表
         Route::get('/categories/{id}/groups', 'CategoryController@groupsIndex')->name('categories.groups.index');
-        //全部圈子列表
-        Route::get('/groups', 'GroupsController@index')->name('groups.index');*/
+       */
 
 
 

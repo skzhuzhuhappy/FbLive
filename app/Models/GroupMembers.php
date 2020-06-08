@@ -21,6 +21,11 @@ class GroupMembers extends Model
         'disabled',
     ];
 
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
     //判断用户当前登陆用户是否在圈子中
     public static function is_group_auth($group_id)
     {

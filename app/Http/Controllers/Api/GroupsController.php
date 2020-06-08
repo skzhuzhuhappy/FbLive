@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Requests\Api\GroupsRequest;
 use App\Http\Resources\Api\AreasResource;
 use App\Http\Resources\Api\GroupCategoriesResource;
+use App\Http\Resources\Api\GroupMembersResource;
 use App\Http\Resources\Api\GroupsResource;
 use App\Http\Resources\Api\UserResource;
 use App\Models\Areas;
@@ -22,16 +23,14 @@ class GroupsController extends Controller
     //圈子列表
     public function index(Request $request)
     {
+        //审核通过
+        $where['status'] = 1;
         $name = $request->name;
-        if($name) {
+        if ($name) {
             $where[] = ['name', 'like', "%$name%"];
-            $where['status']=1;
-            //圈子列表
-            $groups = Groups::where($where)->orderBy('created_at', 'desc')->get();
-        }else{
-            //圈子列表
-            $groups = Groups::where('status','1')->orderBy('created_at', 'desc')->get();
         }
+        //圈子列表
+        $groups = Groups::where($where)->latest()->get();
 
         return GroupsResource::collection($groups);
     }
@@ -40,21 +39,23 @@ class GroupsController extends Controller
     public function userIndex()
     {
         $user = Auth::user();
-        $groups = Groups::where(['user_id' => $user->getAuthIdentifier()])->orderBy('created_at', 'desc')->get();
+        $groups = Groups::where(['user_id' => $user->getAuthIdentifier()])->orderBy('status', 'asc')->latest()->get();
         return GroupsResource::collection($groups);
     }
+
     //某个用户下所有圈子
     public function useridIndex($id)
     {
-        $groups = Groups::where(['user_id' =>$id])->orderBy('created_at', 'desc')->get();
+
+        $groups = Groups::where(['user_id' => $id])->orderBy('status', 'asc')->latest()->get();
         return GroupsResource::collection($groups);
     }
+
     //圈子类型 列表
     public function categorysIndex()
     {
 
-        $categorys = GroupCategories::where(['status'=>0,'parent_id'=>0])->orderBy('level', 'asc')->get();
-
+        $categorys = GroupCategories::where(['status' => 0, 'parent_id' => 0])->orderBy('level', 'asc')->get();
         return GroupCategoriesResource::collection($categorys);
     }
 
@@ -64,39 +65,60 @@ class GroupsController extends Controller
         ///$area_list = Groups::select('area_id')->get()->Toarray();
         //$area_id_list = array_unique(array_column($area_list,'area_id'));
         //->whereIn('id', $area_id_list)
-        $groups = Areas::where(['pid'=>0])->orderBy('created_at', 'desc')->get();
+        $groups = Areas::where(['pid' => 0])->orderBy('created_at', 'desc')->get();
         return AreasResource::collection($groups);
     }
 
-    //圈子下的用户列表
+    //圈子下的用户列表 (审核状态列表)
     public function groupuserIndex($id)
     {
-        $user_list = GroupMembers::select('user_id')->where(['group_id'=>$id])->get()->ToArray();
+        $user_list = GroupMembers::select('user_id')->where(['group_id' => $id])->get()->ToArray();
         $groups = User::whereIn('id', $user_list)->orderBy('created_at', 'desc')->get();
+
         return UserResource::collection($groups);
     }
+
 
     //categoryAreaIndex
     public function cateareaIndex(Request $request)
     {
         $validator = \Validator::make($request->input(), [
             'category_id' => 'required|integer',
-            //'area_id' => 'required|integer',
+            'name' => 'string',
         ]);
 
         if ($validator->fails()) {
-            return $this->failed('参数名称不对',402);
+            return $this->failed('参数名称不对', 402);
             //return $this->errorBadRequest($validator);
         }
-        //圈子名称搜索
-        if(isset($request->name)&&$request->name){
-            $groups = Groups::where(['category_id'=>$request->category_id])
-                ->where('groups.name', 'like', '%' . $request->name . '%')
-                ->orderBy('created_at', 'desc')->get();
-        }else{
-            $groups = Groups::where(['category_id'=>$request->category_id])
-                ->orderBy('created_at', 'desc')->get();
+        //圈子名称搜索 类型搜索
+        $where['status'] = 1;
+        $where['category_id'] = $request->category_id;
+        if ($request->name) {
+            $where[] = ['name', 'like', "%$request->name%"];
         }
+
+        $groups = Groups::where($where)->with(['groupMembers' => function ($query) {
+            //如果登陆
+            $user = Auth::user();
+            if ($user) {
+                $query->where('user_id', $user->getAuthIdentifier());
+            }
+        }])->orderBy('created_at', 'desc')->get();
+        //var_dump($groups);exit();
+        //登陆情况
+        $user = Auth::user();
+        if ($user) {
+            foreach ($groups as $key => $val) {
+                $res = $val->groupMembers->first();
+                //审核加入状态：0 - 待审核、1 - 通过、2 - 拒绝
+                $groups[$key]['audit'] = $res->audit ?? "";
+                //用户身份  1.加入者 2.管理者 3.创建者
+                $groups[$key]['user_type'] = $res->user_type ?? "";
+                $groups[$key]['is_group_in'] = $res ? true : false;
+            }
+        }
+
         return GroupsResource::collection($groups);
     }
 
@@ -104,7 +126,45 @@ class GroupsController extends Controller
     //返回单一圈子信息
     public function show($id)
     {
-        $groups = Groups::findOrFail($id);
+        $where['status'] = 1;
+        $where['id'] = $id;
+
+        $groups = Groups::where($where)->with(['groupMembers' => function ($query) {
+            //如果登陆
+            $user = Auth::user();
+            if ($user) {
+                $query->where('user_id', $user->getAuthIdentifier());
+            }
+        }])->orderBy('created_at', 'desc')->first();
+
+        //是否可以发布动态 发布动态权限 1全部可以发布 2管理员和组员  3管理员发言
+        $groups['is_publish_feed'] = $groups->publish_permission = 1 ? true : false;
+
+        //登陆情况
+        $user = Auth::user();
+        if ($user) {
+
+            $res = $groups->groupMembers->first();
+
+            //审核加入状态：0 - 待审核、1 - 通过、2 - 拒绝
+            $groups['audit'] = $res->audit ?? "";
+            //用户身份  1.加入者 2.管理者 3.创建者
+            $groups['user_type'] = $res->user_type ?? "";
+            $groups['is_group_in'] = $res ? true : false;
+            if ($res) {
+                //是否可以发布动态
+
+                if($groups->publish_permission = 2){
+                    $groups['is_publish_feed'] =   $res->user_type != 1 ? true : false;
+                }
+                if($groups->publish_permission = 3){
+                    $groups['is_publish_feed'] =  $res->user_type == 3 ? true : false;
+                }
+            }
+
+
+
+        }
         return $this->success(new GroupsResource($groups));
     }
 
@@ -123,37 +183,31 @@ class GroupsController extends Controller
             return $this->failed('img_top 不存在',402);
         }*/
 
-
-
-
         $user = Auth::user();
-        if(!$user){
-            return $this->failed('未获得用户，检查token',402);
+        if (!$user) {
+            return $this->failed('未获得用户，检查token', 402);
         }
-
 
         $result['img_head'] = $this::save_base64($request->img_head);
         //var_dump($result);exit();
-        $result['img_top'] =  $this::save_base64($request->img_top);
-
-
+        $result['img_top'] = $this::save_base64($request->img_top);
 
         $result['user_id'] = $user->getAuthIdentifier();
         $result['status'] = 1;
         $result['users_count'] = 1;
         $group = Groups::create($result);
-        if(!$group){
-            return $this->failed('圈子创建失败',402);
+        if (!$group) {
+            return $this->failed('圈子创建失败', 402);
         }
+
         //加入圈子
-        $res_mem['group_id'] = $group->id;
         $res_mem['group_id'] = $group->id;
         $res_mem['user_id'] = $group->user_id;
         $res_mem['user_type'] = 3;
 
         $group_mem = GroupMembers::create($res_mem);
-        if(!$group_mem){
-            return $this->failed('圈子创建失败',402);
+        if (!$group_mem) {
+            return $this->failed('圈子创建失败', 402);
         }
         return $this->setStatusCode(201)->success('圈子创建成功');
     }
@@ -167,24 +221,25 @@ class GroupsController extends Controller
         // 不属于我的圈子
         $user = Auth::user();
         if ($group->user_id != $user->getAuthIdentifier()) {
-            return $this->failed('圈子用户不对应',402);
+            return $this->failed('圈子用户不对应', 402);
         }
         Groups::update($request->all());
         return $this->setStatusCode(201)->success('圈子修改成功');
 
     }
+
     //删除
     public function destroy($id)
     {
 
-        $group = Groups::where('id',$id)->first();
-        if(!$group){
-            return $this->failed('圈子用不存在',402);
+        $group = Groups::where('id', $id)->first();
+        if (!$group) {
+            return $this->failed('圈子用不存在', 402);
         }
         // 不属于我的圈子
         $user = Auth::user();
         if ($group->user_id != $user->getAuthIdentifier()) {
-            return $this->failed('圈子用户不对应',402);
+            return $this->failed('圈子用户不对应', 402);
         }
 
         $group->delete();
@@ -194,15 +249,80 @@ class GroupsController extends Controller
 
 
     //用户退出圈子
-    public function groupExit($id){
+    public function groupExit($id)
+    {
         $user = Auth::user();
-        $groupMember = GroupMembers::where(['user_id'=>$user->getAuthIdentifier(),'group_id'=>$id])->first();
-        if(!$groupMember){
-            return $this->failed('用户不在这个圈子',402);
+        $groupMember = GroupMembers::where(['user_id' => $user->getAuthIdentifier(), 'group_id' => $id])->first();
+        if (!$groupMember) {
+            return $this->failed('用户不在这个圈子', 402);
         }
         $groupMember->delete();
         return $this->setStatusCode(201)->success('圈子删除成功');
 
     }
+
+    //检查圈子名称是否可用
+    public function nameIndex(Request $request)
+    {
+
+        $validator = \Validator::make($request->input(), [
+            'name' => 'required|string|max:15',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->failed('name 格式不正确', 402);
+        }
+
+        $res = Groups::where('name', $request->name)->first();
+        return $this->success(['is_use' => $res ? false : true]);
+
+    }
+
+    //圈子下的用户列表
+    public function groupMemberList($id)
+    {
+        $group_member_list = GroupMembers::where('group_id', $id)->with('user')->orderBy('created_at', 'desc')->get();
+        //var_dump($groups);exit();
+        //登陆情况
+        $user = Auth::user();
+        //var_dump($user);exit();
+        if ($user) {
+            foreach ($group_member_list as $k => $v) {
+                $res = $v->user;
+                //审核加入状态：0 - 待审核、1 - 通过、2 - 拒绝
+                $group_member_list[$k]['username'] = $res->name ?? "";
+                //用户身份  1.加入者 2.管理者 3.创建者
+                $group_member_list[$k]['avatar'] = $res->avatar ?? "";
+            }
+
+        }
+        // var_dump($groupmember);exit();
+        return GroupMembersResource::collection($group_member_list);
+    }
+
+    //审核加入圈子者
+    public function groupMemberStatus(Request $request)
+    {
+        $validator = \Validator::make($request->input(), [
+            'audit' => 'required|Integer|between:2,3',
+            'group_member_id' => 'required|Integer',
+        ]);
+        if ($validator->fails()) {
+            return $this->failed('参数 格式不正确', 402);
+        }
+        $group_member = GroupMembers::find($request->group_member_id);
+        if ($group_member) {
+            $group_member->audit = $request->audit;
+            $res = $group_member->save();
+            if ($res) {
+                return $this->setStatusCode(201)->success('操作成功');
+            } else {
+                return $this->failed('修改失败', 402);
+            }
+        } else {
+            return $this->failed('未查到数据', 402);
+        }
+    }
+
 
 }

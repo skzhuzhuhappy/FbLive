@@ -41,12 +41,27 @@ class GroupsResource extends JsonResource
                 'status_info' => CommonEnum::getStatusName($this->status),
                 'users_count'=>$this->users_count,
                 'posts_count'=>$this->posts_count,
+                //发布动态权限 1全部可以发布 2管理员和组员  3管理员发言
+                'publish_permission'=>$this->publish_permission,
+                //加入权限 1 随意加入 2申请加入
+                'join_permission'=>$this->join_permission,
+                //发布的动态是否需要审核 0 不需要 1 需要
+                'feed_status'=>$this->feed_status,
+                //未加入是否可见 0可见 1不可见
+                'visible'=>$this->visible,
                 'created_at'=>(string)$this->created_at,
                 'updated_at'=>(string)$this->updated_at,
+                //是否在小队中
+                'is_group_in' =>$this->is_group_in,
+                //审核加入状态：0 - 待审核、1 - 通过、2 - 拒绝
+                'audit' =>$this->audit,
+                //用户身份  1.加入者 2.管理者 3.创建者
+                'user_type' =>$this->user_type,
+                //是否可以发布动态
+                'is_publish_feed' =>$this->is_publish_feed,
                 'user_id_info'=>new UserResource(User::find($this->user_id)),
                 'category_id_info'=>new GroupCategoriesResource(GroupCategories::find($this->category_id)),
                 'area_id_info'=>new AreasResource(Areas::find($this->area_id)),
-                'is_group_in' =>GroupMembers::is_group_auth($this->id),
             ];
         }else{
             return [
@@ -67,6 +82,7 @@ class GroupsResource extends JsonResource
                 'status_info' => CommonEnum::getStatusName($this->status),
                 'created_at'=>(string)$this->created_at,
                 'updated_at'=>(string)$this->updated_at,
+                'is_publish_feed' =>$this->is_publish_feed,
                 'user_id_info'=>new UserResource(User::find($this->user_id)),
                 'category_id_info'=>new GroupCategoriesResource(GroupCategories::find($this->category_id)),
                 'area_id_info'=>new AreasResource(Areas::find($this->area_id)),

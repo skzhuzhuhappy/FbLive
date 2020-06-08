@@ -42,6 +42,14 @@ class Groups extends Model
         return $this->hasMany(User::class);
     }
 
+    //关联 groupMember
+    public function groupMembers()
+    {
+        return $this->hasMany(GroupMembers::class,'group_id','id');
+    }
+
+
+
     public function recentusers($limit = 5)
     {
         return $this->users()->limit($limit);
@@ -52,11 +60,13 @@ class Groups extends Model
         return $this->belongsTo(GroupCategories::class);
     }
 
+    //更新发布动态数量
     public function updatePostCount($group_id){
         $group = Groups::find($group_id);
         $group->posts_count = $group->posts_count +1;
         $group->save();
     }
+    //更新用户加入数量
     public function updateUserCount($group_id){
         $group = Groups::find($group_id);
         $group->users_count = $group->users_count +1;

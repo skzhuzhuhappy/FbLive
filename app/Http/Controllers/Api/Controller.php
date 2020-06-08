@@ -6,6 +6,7 @@ use App\Api\Helpers\ApiResponse;
 use App\Http\Controllers\Controller as BaseController;
 use Illuminate\Support\Facades\Storage;
 
+
 class Controller extends BaseController
 {
 
@@ -123,6 +124,26 @@ class Controller extends BaseController
             $new_file = config('filesystems.disks.group.url') . $new_file;
             return $new_file;
         }
+    }
+
+
+    // 返回错误的请求
+    protected function errorBadRequest($validator)
+    {
+        $result = [];
+        $messages = $validator->errors()->toArray();
+
+        if ($messages) {
+            foreach ($messages as $field => $errors) {
+                foreach ($errors as $error) {
+                    $result[] = [
+                        'field' => $field,
+                        'code' => $error,
+                    ];
+                }
+            }
+        }
+        return $result;
     }
 
 
