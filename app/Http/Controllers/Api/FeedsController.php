@@ -107,6 +107,7 @@ class FeedsController extends Controller
         $status = $request->status;
         $recommended_at = $request->recommended_at;
         $hot = $request->hot;
+        $where = [];
         if(isset($name)){
             $where[] = ['text_body', 'like', "%$name%"];
         }
