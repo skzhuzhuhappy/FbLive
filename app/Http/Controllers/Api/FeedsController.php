@@ -107,7 +107,7 @@ class FeedsController extends Controller
         $status = $request->status;
         $recommended_at = $request->recommended_at;
         $hot = $request->hot;
-        $where = [];
+        $where['group_id'] = $request->id;
         if(isset($name)){
             $where[] = ['text_body', 'like', "%$name%"];
         }
@@ -120,6 +120,7 @@ class FeedsController extends Controller
         if(isset($hot)){
             $where['hot'] = $hot;
         }
+        //var_dump($where);exit();
         $feed_list = Feeds::feedList($where);
         return FeedsResource::collection($feed_list);
     }
