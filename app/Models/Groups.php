@@ -30,6 +30,12 @@ class Groups extends Model
         'img_top',
         'users_count',
         'posts_count',
+        'node',
+        'publish_permission',
+        'join_permission',
+        'feed_status',
+        'visible',
+        'status',
     ];
 
     public function user()
