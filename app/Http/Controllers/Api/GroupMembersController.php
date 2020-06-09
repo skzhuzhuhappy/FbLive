@@ -44,7 +44,6 @@ class GroupMembersController extends Controller
             //更新圈子加入人数
             (new Groups())->updateUserCount($request->group_id);
             return $this->setStatusCode($statusCode)->success($mes);
-
         }
     }
 
