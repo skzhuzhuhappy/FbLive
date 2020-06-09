@@ -76,10 +76,13 @@ Route::namespace('Api')->prefix('v1')->group(function () {
         Route::post('/group/name','GroupsController@nameIndex')->name('groups.name.index');
         //圈子下的用户管理列表
         Route::get('/groups/group_member/{id}', 'GroupsController@groupMemberList')->name('groups.group_member.list');
-        //  审核加入圈子用户列表
+        // 审核加入圈子用户列表
         Route::post('/group/group_member/status','GroupsController@groupMemberStatus')->name('groups.group_member.status');
         //移除圈子用户
         Route::get('/group_member/delete/{id}', 'GroupMembersController@delete')->name('group_member.delete');
+        //邀请用户加入小队
+        Route::post('/group_member/user/add','GroupMembersController@userAdd')->name('groups.user.add');
+
 
 
 
