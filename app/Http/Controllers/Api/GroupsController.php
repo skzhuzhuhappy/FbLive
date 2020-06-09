@@ -197,7 +197,7 @@ class GroupsController extends Controller
         $res_mem['user_id'] = $group->user_id;
         $res_mem['user_type'] = 3;
         $res_mem['audit'] = 1;
-        
+
 
         $group_mem = GroupMembers::create($res_mem);
         if (!$group_mem) {
@@ -284,7 +284,7 @@ class GroupsController extends Controller
             foreach ($group_member_list as $k => $v) {
                 $res = $v->user;
                 //审核加入状态：0 - 待审核、1 - 通过、2 - 拒绝
-                $group_member_list[$k]['username'] = $res->name ?? "";
+                $group_member_list[$k]['name'] = $res->name ?? "";
                 //用户身份  1.加入者 2.管理者 3.创建者
                 $group_member_list[$k]['avatar'] = $res->avatar ?? "";
             }
