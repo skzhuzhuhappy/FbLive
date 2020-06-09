@@ -79,7 +79,7 @@ Route::namespace('Api')->prefix('v1')->group(function () {
         //  审核加入圈子用户列表
         Route::post('/group/group_member/status','GroupsController@groupMemberStatus')->name('groups.group_member.status');
         //移除圈子用户
-        Route::delete('/group_member/{id}', 'GroupMembersController@delete')->name('group_member.delete');
+        Route::get('/group_member/delete/{id}', 'GroupMembersController@delete')->name('group_member.delete');
 
 
 
