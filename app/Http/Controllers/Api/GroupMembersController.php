@@ -72,7 +72,6 @@ class GroupMembersController extends Controller
         }
 
 
-
     }
 
 }
