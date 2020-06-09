@@ -204,6 +204,7 @@ class GroupsController extends Controller
         $res_mem['group_id'] = $group->id;
         $res_mem['user_id'] = $group->user_id;
         $res_mem['user_type'] = 3;
+        $res_mem['audit'] = 1;
 
         $group_mem = GroupMembers::create($res_mem);
         if (!$group_mem) {

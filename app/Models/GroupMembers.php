@@ -19,6 +19,8 @@ class GroupMembers extends Model
         'audit',
         'user_type',
         'disabled',
+        'audit',
+        'can_pub',
     ];
 
     public function user()
