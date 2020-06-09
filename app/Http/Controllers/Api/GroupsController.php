@@ -175,14 +175,6 @@ class GroupsController extends Controller
         //组装数据
         $result = $request->all();
 
-        /*if (!$request->file('img_head')->isValid()) {
-            return $this->failed('img_head 不存在',402);
-        }
-
-        if (!$request->file('img_top')->isValid()) {
-            return $this->failed('img_top 不存在',402);
-        }*/
-
         $user = Auth::user();
         if (!$user) {
             return $this->failed('未获得用户，检查token', 402);
@@ -205,6 +197,7 @@ class GroupsController extends Controller
         $res_mem['user_id'] = $group->user_id;
         $res_mem['user_type'] = 3;
         $res_mem['audit'] = 1;
+        
 
         $group_mem = GroupMembers::create($res_mem);
         if (!$group_mem) {

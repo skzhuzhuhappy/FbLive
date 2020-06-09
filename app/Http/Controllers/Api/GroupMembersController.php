@@ -28,8 +28,9 @@ class GroupMembersController extends Controller
         if($res){
             return $this->failed('该用户已经加入该圈子',402);
         }else{
-            $join_permission= Groups::where('id',$request->group_id)->value('join_permission');
-            if($join_permission == 2){
+            //$join_permission= Groups::where('id',$request->group_id)->value('join_permission');
+            $group = Groups::where('id',$request->group_id)->first();
+            if($group->join_permission == 2){
                 $result['audit'] = 0;
                 $mes = '用户申请成功,等待审核';
                 $statusCode = 202;
@@ -38,6 +39,11 @@ class GroupMembersController extends Controller
                 $mes = '用户加入成功';
                 $statusCode = 201;
             }
+
+            if($group->publish_permission != 1){
+                $result['can_pub'] = 1;
+            }
+
             $result['user_type'] = 1;
             //加入圈子
             GroupMembers::create($result);
