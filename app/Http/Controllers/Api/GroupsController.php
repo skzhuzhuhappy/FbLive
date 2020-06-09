@@ -275,7 +275,9 @@ class GroupsController extends Controller
     //圈子下的用户列表
     public function groupMemberList($id)
     {
-        $group_member_list = GroupMembers::where('group_id', $id)->with('user')->orderBy('created_at', 'desc')->get();
+        $where['group_id'] = $id;
+        //$where['user_type'] = 1;
+        $group_member_list = GroupMembers::where($where)->with('user')->orderBy('created_at', 'desc')->get();
         //var_dump($groups);exit();
         //登陆情况
         $user = Auth::user();
@@ -317,6 +319,7 @@ class GroupsController extends Controller
             return $this->failed('未查到数据', 402);
         }
     }
+
 
 
 }

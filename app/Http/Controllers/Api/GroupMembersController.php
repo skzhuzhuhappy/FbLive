@@ -53,6 +53,20 @@ class GroupMembersController extends Controller
         }
     }
 
+    //移除用户
+    public function delete($id){
+        $flight = GroupMembers::find($id);
+        if($flight){
+            $flight->delete();
+            return $this->setStatusCode(201)->success('移除成功');
+        }else{
+            return $this->failed('未查到数据', 402);
+        }
+
+    }
+
+
+
 
 
 
