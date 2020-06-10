@@ -143,9 +143,7 @@ class GroupsController extends Controller
         //登陆情况
         $user = Auth::user();
         if ($user) {
-
             $res = $groups->groupMembers->first();
-
             //审核加入状态：0 - 待审核、1 - 通过、2 - 拒绝
             $groups['audit'] = $res->audit ?? "";
             //用户身份  1.加入者 2.管理者 3.创建者
@@ -153,16 +151,13 @@ class GroupsController extends Controller
             $groups['is_group_in'] = $res ? true : false;
             if ($res) {
                 //是否可以发布动态
-
                 if($groups->publish_permission == 2){
-                    $groups['is_publish_feed'] =   $res->user_type != 1 ? true : false;
+                    $groups['is_publish_feed'] =   $res->audit == 1 ? true : false;
                 }
                 if($groups->publish_permission == 3){
                     $groups['is_publish_feed'] =  $res->user_type == 3 ? true : false;
                 }
             }
-
-
 
         }
         return $this->success(new GroupsResource($groups));

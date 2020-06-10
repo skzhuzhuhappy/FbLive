@@ -139,8 +139,9 @@ class GroupsController extends AdminController
             $category[$v['id']] = $v['name'];
         }
         //var_dump(json_encode($category));exit();
-        $form->select('parent_id',__('类型'))->options($category)->load('category_id', '/admin/groups/category');
-        $form->select('category_id');
+      
+        $form->select('category_id',__('类型'))->options($category)->load('parent_id', '/admin/groups/category');
+        $form->select('parent_id as category_ids');
 
         //$form->number('area_id', __('Area id'));
         $form->image('img_head', __('圈子头像'));
