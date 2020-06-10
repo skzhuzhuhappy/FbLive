@@ -121,7 +121,7 @@ class FeedsController extends Controller
             $where['hot'] = $hot;
         }
         //var_dump($where);exit();
-        $feed_list = Feeds::feedList($where);
+        $feed_list = Feeds::feedList($where,10);
         return FeedsResource::collection($feed_list);
     }
 
