@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Requests\Api\UserRequest;
+use App\Http\Resources\Api\UserListResource;
 use App\Http\Resources\Api\UserResource;
 use App\Jobs\Api\SaveLastTokenJob;
 use App\Models\Groups;
@@ -102,5 +103,40 @@ class UserController extends Controller
     {
         Auth::logout();
         return $this->success('退出成功...');
+    }
+
+    //
+    public function groupIndex(Request $request)
+    {
+        $validator = \Validator::make($request->input(), [
+            'name' => 'required|string',
+            'group_id' => 'required|integer',
+        ]);
+        if ($validator->fails()) {
+            return $this->failed('参数名称不对', 402);
+            //return $this->errorBadRequest($validator);
+        }
+        if ($request->name && $request->group_id) {
+            $where[] = ['name', 'like', "%$request->name%"];
+
+            $users = User::where($where)->with(['groupMembers' => function ($query,$request) {
+                //如果登陆
+                $query->where('group_id', $request->group_id);
+            }])->orderBy('created_at', 'desc')->get();
+
+            //圈子列表
+            //$users = User::where($where)->orderBy('created_at', 'desc')->get();
+            foreach ($users as $k => $v) {
+                $res = $v->groupMembers->first();
+                //审核加入状态：0 - 待审核、1 - 通过、2 - 拒绝
+                $users[$k]['audit'] = $res->audit ?? "";
+                //用户身份  1.加入者 2.管理者 3.创建者
+                $users[$k]['user_type'] = $res->user_type ?? "";
+                //是否加入圈子
+                $users[$k]['is_group_in'] = $res ? true : false;
+            }
+        }
+        //3个用户为一页
+        return UserListResource::collection($users);
     }
 }

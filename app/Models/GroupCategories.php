@@ -83,5 +83,13 @@ class   GroupCategories extends Model
         ->implode(' - '); // 用 - 符号将数组的值组装成一个字符串
     }
 
+    /*
+     * 获取 全部父类型
+     * */
+    public static function categoryList(){
+
+        return self::where(['parent_id'=>0,'status'=>0])->select('id','name')->get()->toArray();
+    }
+
 
 }

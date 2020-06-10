@@ -39,7 +39,8 @@ Route::namespace('Api')->prefix('v1')->group(function () {
             Route::get('/users/{user}', 'UserController@show')->name('users.show');
             //用户退出
             Route::get('/logout', 'UserController@logout')->name('users.logout');
-
+            //用户列表 返回是否在小队中
+            Route::get('/users/group', 'UserController@groupIndex')->name('users.group');
         });
 
         /*
@@ -78,7 +79,7 @@ Route::namespace('Api')->prefix('v1')->group(function () {
         Route::get('/groups/group_member/{id}', 'GroupsController@groupMemberList')->name('groups.group_member.list');
         // 审核加入圈子用户列表
         Route::post('/group/group_member/status','GroupsController@groupMemberStatus')->name('groups.group_member.status');
-        //移除圈子用户
+        //删除圈子用户
         Route::get('/group_member/delete/{id}', 'GroupMembersController@delete')->name('group_member.delete');
         //邀请用户加入小队
         Route::post('/group_member/user/add','GroupMembersController@userAdd')->name('groups.user.add');
@@ -96,18 +97,18 @@ Route::namespace('Api')->prefix('v1')->group(function () {
             //更新圈子
             Route::put('/groups/{id}', 'GroupsController@update')->name('groups.update');
             //删除
-            Route::delete('/groups/{id}', 'GroupsController@destroy')->name('groups.destroy');
+            Route::get('/groups/{id}', 'GroupsController@destroy')->name('groups.destroy');
             //用户加入圈子
             Route::post('/groupmembers', 'GroupMembersController@store')->name('groupmembers.index');
             //用户退出圈子
-            Route::delete('/group/exit/{id}', 'GroupsController@groupExit')->name('group.exit');
+            Route::get('/group/exit/{id}', 'GroupsController@groupExit')->name('group.exit');
 
             //发布动态
             Route::post('/feeds', 'FeedsController@store')->name('feeds.store');
             //审核动态操作
             Route::post('/feeds/update', 'FeedsController@update')->name('feeds.update');
             //删除动态评论
-            Route::delete('/feeds/reply/delete', 'FeedsController@replyDelete')->name('feeds.delete');
+            Route::get('/feeds/reply/delete', 'FeedsController@replyDelete')->name('feeds.delete');
             //添加动态评论
             Route::post('/feeds/reply', 'FeedsController@reply')->name('feeds.reply');
             //动态点赞

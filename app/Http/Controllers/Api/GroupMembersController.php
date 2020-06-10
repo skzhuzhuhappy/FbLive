@@ -45,10 +45,13 @@ class GroupMembersController extends Controller
             return $this->failed('未查到数据', 402);
         }
     }
+
     //邀请用户加入
-    public function userAdd(Request $request){
+    public function userAdd(Request $request)
+    {
         $validator = \Validator::make($request->input(), [
-            'name' => 'required|string',
+            'name' => 'string',
+            'user_id' => 'integer',
             'group_id' => 'required|string',
         ]);
 
@@ -59,6 +62,10 @@ class GroupMembersController extends Controller
         $where = array();
         if ($request->name) {
             $where[] = ['name', 'like', "%$request->name%"];
+        }
+
+        if ($request->user_id) {
+            $where['id'] = $request->user_id;
         }
 
         $user = User::where($where)->first();
