@@ -14,4 +14,6 @@ Route::group([
     $router->resource('users', UserController::class);
     $router->resource('groups', GroupsController::class);
     $router->resource('feeds', FeedsController::class);
+    $router->get('/groups/category', 'GroupsController@category')->name('admin.groups.category');
+
 });

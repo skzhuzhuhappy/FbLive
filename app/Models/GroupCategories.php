@@ -91,5 +91,14 @@ class   GroupCategories extends Model
         return self::where(['parent_id'=>0,'status'=>0])->select('id','name')->get()->toArray();
     }
 
+    /*
+   * 获取 pid获取子类型列表
+   * */
+    public static function categoryListParent_id($parent_id){
+
+        return self::children()->where('parent_id', $parent_id)->get(['id', DB::raw('name as text')]);
+    }
+
+
 
 }

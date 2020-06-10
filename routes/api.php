@@ -39,7 +39,7 @@ Route::namespace('Api')->prefix('v1')->group(function () {
             Route::get('/users/{user}', 'UserController@show')->name('users.show');
             //用户退出
             Route::get('/logout', 'UserController@logout')->name('users.logout');
-            //用户列表 返回是否在小队中
+            //用户列表
             Route::get('/users/group', 'UserController@groupIndex')->name('users.group');
         });
 
@@ -97,7 +97,7 @@ Route::namespace('Api')->prefix('v1')->group(function () {
             //更新圈子
             Route::put('/groups/{id}', 'GroupsController@update')->name('groups.update');
             //删除
-            Route::get('/groups/{id}', 'GroupsController@destroy')->name('groups.destroy');
+            Route::get('/groups/delete/{id}', 'GroupsController@destroy')->name('groups.destroy');
             //用户加入圈子
             Route::post('/groupmembers', 'GroupMembersController@store')->name('groupmembers.index');
             //用户退出圈子

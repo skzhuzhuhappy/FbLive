@@ -135,6 +135,7 @@ class UserController extends Controller
                 //是否加入圈子
                 $users[$k]['is_group_in'] = $res ? true : false;
             }
+
         }
         //3个用户为一页
         return UserListResource::collection($users);

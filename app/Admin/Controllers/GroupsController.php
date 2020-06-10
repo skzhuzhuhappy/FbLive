@@ -8,6 +8,7 @@ use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Show;
+use Illuminate\Http\Request;
 
 class GroupsController extends AdminController
 {
@@ -133,11 +134,13 @@ class GroupsController extends AdminController
         $form->display('user_id', __('创建用户id'));
         //获得类型列表
         $category_list = GroupCategories::categoryList();
+        $category = array();
         foreach($category_list as $k=>$v){
-            $category_list[$k]['text'] = $v['name'];
-            unset($category_list[$k]['name']);
+            $category[$v['id']] = $v['name'];
         }
-        $form->select('category_id', __('小队类型id'))->options($category_list);
+        //var_dump(json_encode($category));exit();
+        $form->select('category_id', __('类型'))->options($category)->load('children', '/admin/groups/category');
+        $form->select('children');
 
         //$form->number('area_id', __('Area id'));
         $form->image('img_head', __('圈子头像'));
@@ -195,5 +198,12 @@ class GroupsController extends AdminController
 
 
         return $form;
+    }
+
+    public function category(Request $request)
+    {
+        $provinceId = $request->get('q');
+        var_dump($provinceId);exit();
+        return  GroupCategories::categoryListParent_id($provinceId);
     }
 }
