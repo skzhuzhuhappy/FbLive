@@ -300,7 +300,7 @@ class GroupsController extends Controller
     public function groupMemberStatus(Request $request)
     {
         $validator = \Validator::make($request->input(), [
-            'audit' => 'required|Integer|between:2,3',
+            'audit' => 'required|Integer|between:1,2',
             'group_member_id' => 'required|Integer',
         ]);
         if ($validator->fails()) {
