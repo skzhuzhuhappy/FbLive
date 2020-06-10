@@ -62,15 +62,16 @@ class GroupMembersController extends Controller
         $where = array();
         if ($request->name) {
             $where[] = ['name', 'like', "%$request->name%"];
+            $user = User::where($where)->first();
+            //加入
+            $res = (new GroupMembers())->join_group($request->group_id, $user->id);
         }
 
         if ($request->user_id) {
-            $where['id'] = $request->user_id;
+            $res = (new GroupMembers())->join_group($request->group_id, $request->user_id);
         }
 
-        $user = User::where($where)->first();
-        //加入
-        $res = (new GroupMembers())->join_group($request->group_id, $user->id);
+
         if ($res['type'] == 'failed') {
             return $this->failed('该用户已经加入该圈子', 402);
         }
