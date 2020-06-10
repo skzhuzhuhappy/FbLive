@@ -138,7 +138,7 @@ class GroupsController extends Controller
         }])->orderBy('created_at', 'desc')->first();
 
         //是否可以发布动态 发布动态权限 1全部可以发布 2管理员和组员  3管理员发言
-        $groups['is_publish_feed'] = $groups->publish_permission = 1 ? true : false;
+        $groups['is_publish_feed'] = $groups->publish_permission == 1 ? true : false;
 
         //登陆情况
         $user = Auth::user();
