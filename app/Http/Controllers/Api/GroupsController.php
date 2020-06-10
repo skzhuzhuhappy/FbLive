@@ -153,17 +153,13 @@ class GroupsController extends Controller
             $groups['is_group_in'] = $res ? true : false;
             if ($res) {
                 //是否可以发布动态
-
-                if($groups->publish_permission = 2){
-                    $groups['is_publish_feed'] =   $res->user_type != 1 ? true : false;
+                if ($groups->publish_permission == 2) {
+                    $groups['is_publish_feed'] = $res->user_type != 1 ? true : false;
                 }
-                if($groups->publish_permission = 3){
-                    $groups['is_publish_feed'] =  $res->user_type == 3 ? true : false;
+                if ($groups->publish_permission == 3) {
+                    $groups['is_publish_feed'] = $res->user_type == 3 ? true : false;
                 }
             }
-
-
-
         }
         return $this->success(new GroupsResource($groups));
     }
@@ -319,7 +315,6 @@ class GroupsController extends Controller
             return $this->failed('未查到数据', 402);
         }
     }
-
 
 
 }

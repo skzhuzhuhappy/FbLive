@@ -139,8 +139,8 @@ class GroupsController extends AdminController
             $category[$v['id']] = $v['name'];
         }
         //var_dump(json_encode($category));exit();
-        $form->select('category_id', __('类型'))->options($category)->load('children', '/admin/groups/category');
-        $form->select('children');
+        $form->select('parent_id',__('类型'))->options($category)->load('category_id', '/admin/groups/category');
+        $form->select('category_id');
 
         //$form->number('area_id', __('Area id'));
         $form->image('img_head', __('圈子头像'));
@@ -195,15 +195,15 @@ class GroupsController extends AdminController
 
         });
 
-
-
         return $form;
     }
 
-    public function category(Request $request)
+    protected function category(Request $request)
     {
         $provinceId = $request->get('q');
-        var_dump($provinceId);exit();
-        return  GroupCategories::categoryListParent_id($provinceId);
+
+        $res = GroupCategories::categoryListParent_id($provinceId);
+
+        return $res;
     }
 }

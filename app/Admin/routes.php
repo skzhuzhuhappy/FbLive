@@ -11,9 +11,9 @@ Route::group([
 ], function (Router $router) {
 
     $router->get('/', 'HomeController@index')->name('admin.home');
+    $router->get('/groups/category', 'GroupsController@category')->name('groups.category');
     $router->resource('users', UserController::class);
     $router->resource('groups', GroupsController::class);
     $router->resource('feeds', FeedsController::class);
-    $router->get('/groups/category', 'GroupsController@category')->name('admin.groups.category');
 
 });

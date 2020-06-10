@@ -78,6 +78,14 @@ class GroupsResource extends JsonResource
                 'mode_info' => GroupEnum::getStatusName($this->mode),
                 'users_count'=>$this->users_count,
                 'posts_count'=>$this->posts_count,
+                //发布动态权限 1全部可以发布 2管理员和组员  3管理员发言
+                'publish_permission'=>$this->publish_permission,
+                //加入权限 1 随意加入 2申请加入
+                'join_permission'=>$this->join_permission,
+                //发布的动态是否需要审核 0 不需要 1 需要
+                'feed_status'=>$this->feed_status,
+                //未加入是否可见 0可见 1不可见
+                'visible'=>$this->visible,
                 'status' => $this->status,
                 'status_info' => CommonEnum::getStatusName($this->status),
                 'created_at'=>(string)$this->created_at,

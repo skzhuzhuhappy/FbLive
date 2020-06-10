@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class   GroupCategories extends Model
 {
@@ -44,7 +45,7 @@ class   GroupCategories extends Model
 
     public function children()
     {
-        return $this->hasMany(GroupCategories::class, 'parent_id');
+        return $this->hasMany(GroupCategories::class, 'parent_id','id');
     }
 
     /**
@@ -94,9 +95,9 @@ class   GroupCategories extends Model
     /*
    * 获取 pid获取子类型列表
    * */
-    public static function categoryListParent_id($parent_id){
+    public static  function categoryListParent_id($parent_id){
 
-        return self::children()->where('parent_id', $parent_id)->get(['id', DB::raw('name as text')]);
+        return self::where(['parent_id'=>$parent_id,'status'=>0])->get(['id', DB::raw('name as text')]);
     }
 
 
