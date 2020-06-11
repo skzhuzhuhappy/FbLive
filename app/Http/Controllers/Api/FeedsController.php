@@ -18,11 +18,11 @@ class FeedsController extends Controller
     public function Index(Request $request)
     {
         $name = $request->name;
-        if($name){
+        if ($name) {
             $where[] = ['text_body', 'like', "%$name%"];
-            $feed_list = Feeds::feedList($where,5);
-        }else{
-            $feed_list = Feeds::feedList([],5);
+            $feed_list = Feeds::feedList($where, 5);
+        } else {
+            $feed_list = Feeds::feedList([], 5);
         }
 
         return FeedsResource::collection($feed_list);
@@ -41,11 +41,11 @@ class FeedsController extends Controller
         }
         //var_dump($result);exit();
         //圈子添加动态权限
-        $group = Groups::where('id',$result['group_id'])->value('feed_status');
+        $group = Groups::where('id', $result['group_id'])->value('feed_status');
 
-        if($group){
+        if ($group) {
             $result['status'] = 0;
-        }else{
+        } else {
             $result['status'] = 1;
         }
 
@@ -66,9 +66,9 @@ class FeedsController extends Controller
         if (!$user) {
             return $this->failed('未获得用户，检查token', 402);
         }
-       /* if ($result['user_id'] != $user->getAuthIdentifier()) {
-            return $this->failed('传入user_id 不是当前登陆用户', 402);
-        }*/
+        /* if ($result['user_id'] != $user->getAuthIdentifier()) {
+             return $this->failed('传入user_id 不是当前登陆用户', 402);
+         }*/
         $result['user_id'] = $user->getAuthIdentifier();
         $result['pid'] = 1;
         $result['status'] = 1;
@@ -95,7 +95,7 @@ class FeedsController extends Controller
     //用户动态列表
     public function userIndex($id)
     {
-        $feed_list = Feeds::feedList(['user_id'=>$id]);
+        $feed_list = Feeds::feedList(['user_id' => $id]);
         return FeedsResource::collection($feed_list);
     }
 
@@ -108,25 +108,26 @@ class FeedsController extends Controller
         $recommended_at = $request->recommended_at;
         $hot = $request->hot;
         $where['group_id'] = $request->id;
-        if(isset($name)){
+        if (isset($name)) {
             $where[] = ['text_body', 'like', "%$name%"];
         }
-        if(isset($status)){
+        if (isset($status)) {
             $where['status'] = $status;
         }
-        if(isset($recommended_at)){
+        if (isset($recommended_at)) {
             $where['recommended_at'] = $recommended_at;
         }
-        if(isset($hot)){
+        if (isset($hot)) {
             $where['hot'] = $hot;
         }
         //var_dump($where);exit();
-        $feed_list = Feeds::feedList($where,10);
+        $feed_list = Feeds::feedList($where, 10);
         return FeedsResource::collection($feed_list);
     }
 
     //审核动态
-    public function update(Request $request){
+    public function update(Request $request)
+    {
         $result = $request->all();
         $user = Auth::user();
         if (!$user) {
@@ -137,23 +138,29 @@ class FeedsController extends Controller
         }
         //var_dump($result);exit();
         //圈子添加动态权限
-        $feed = Feeds::where('id',$result['feed_id'])->first();
-        if(isset($result['status'])){
+        $feed = Feeds::where('id', $result['feed_id'])->first();
+        if (isset($result['status'])) {
             $feed->status = $result['status'];
         }
-        if(isset($result['recommended_at'])){
+        if (isset($result['recommended_at'])) {
             $feed->recommended_at = $result['recommended_at'];
         }
-        if(isset($result['hot'])){
+        if (isset($result['hot'])) {
             $feed->hot = $result['hot'];
         }
         $res = $feed->save();
-        if($res){
+        if ($res) {
             return $this->setStatusCode(201)->success('动态修改成功');
         }
     }
 
-
+    //动态评论删除
+    public function replyDelete($id)
+    {
+        $feed = Feeds::where('id', $id)->first();
+        $feed->delete();
+        return $this->setStatusCode(201)->success('动态评论删除成功');
+    }
 
 
 }

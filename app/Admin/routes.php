@@ -15,5 +15,7 @@ Route::group([
     $router->resource('users', UserController::class);
     $router->resource('groups', GroupsController::class);
     $router->resource('feeds', FeedsController::class);
+    $router->resource('categories', CategoryController::class);
+
 
 });

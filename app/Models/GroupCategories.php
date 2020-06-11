@@ -4,9 +4,15 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
+use Encore\Admin\Traits\AdminBuilder;
+use Encore\Admin\Traits\ModelTree;
 
 class   GroupCategories extends Model
 {
+
+    use ModelTree, AdminBuilder;
+
+
     protected $table = 'group_categories';
     /**
      * The attributes that are mass assignable.

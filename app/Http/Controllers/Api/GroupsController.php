@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Requests\Api\GroupsRequest;
+use App\Http\Requests\Api\GroupsUpdateRequest;
 use App\Http\Resources\Api\AreasResource;
 use App\Http\Resources\Api\GroupCategoriesResource;
 use App\Http\Resources\Api\GroupMembersResource;
@@ -203,8 +204,9 @@ class GroupsController extends Controller
 
 
     //更新圈子
-    public function update($id, GroupsRequest $request)
+    public function update($id, GroupsUpdateRequest $request)
     {
+
         $group = Groups::findOrFail($id);
 
         // 不属于我的圈子
@@ -212,7 +214,8 @@ class GroupsController extends Controller
         if ($group->user_id != $user->getAuthIdentifier()) {
             return $this->failed('圈子用户不对应', 402);
         }
-        Groups::update($request->all());
+        //$group::update($request->all());
+        $save = Groups::where('id', $id)->update($request->all());
         return $this->setStatusCode(201)->success('圈子修改成功');
 
     }

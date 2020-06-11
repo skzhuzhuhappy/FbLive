@@ -3,7 +3,7 @@
 namespace App\Http\Requests\Api;
 
 
-class GroupsRequest extends FormRequest
+class GroupsUpdateRequest extends FormRequest
 {
     public function rules()
     {
@@ -18,7 +18,7 @@ class GroupsRequest extends FormRequest
             case 'POST':
                 {
                     return [
-                        'name' => ['required', 'max:12', 'unique:groups,name'],
+                        'name' => ['required', 'max:12'],
                         'category_id' => ['required','integer'],
                         //'area_id' => ['required','integer'],
                         'node' => ['required','Integer','between:1,3'],

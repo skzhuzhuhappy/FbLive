@@ -95,7 +95,7 @@ Route::namespace('Api')->prefix('v1')->group(function () {
             //新建圈子
             Route::post('/groups', 'GroupsController@store')->name('groups.store');
             //更新圈子
-            Route::put('/groups/{id}', 'GroupsController@update')->name('groups.update');
+            Route::post('/groups/update/{id}', 'GroupsController@update')->name('groups.update');
             //删除
             Route::get('/groups/delete/{id}', 'GroupsController@destroy')->name('groups.destroy');
             //用户加入圈子
@@ -108,7 +108,7 @@ Route::namespace('Api')->prefix('v1')->group(function () {
             //审核动态操作
             Route::post('/feeds/update', 'FeedsController@update')->name('feeds.update');
             //删除动态评论
-            Route::get('/feeds/reply/delete', 'FeedsController@replyDelete')->name('feeds.delete');
+            Route::get('/feeds/reply/delete/{id}', 'FeedsController@replyDelete')->name('feeds.delete');
             //添加动态评论
             Route::post('/feeds/reply', 'FeedsController@reply')->name('feeds.reply');
             //动态点赞
