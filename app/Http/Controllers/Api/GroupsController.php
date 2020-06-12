@@ -266,7 +266,7 @@ class GroupsController extends Controller
         }
         $groupMember->delete();
         return $this->setStatusCode(201)->success('用户退出圈子成功');
-        
+
     }
 
     //检查圈子名称是否可用

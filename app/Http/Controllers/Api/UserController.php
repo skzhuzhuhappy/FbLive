@@ -65,6 +65,9 @@ class UserController extends Controller
             if (!$userinfo) {
                 $res['password'] = $pwd;
                 User::create($res);
+            }else{
+                $userinfo->avatar = $res['avatar'];
+                $userinfo->save();
             }
         } else {
             return $this->failed('账号或密码错误或不存在', 400);
