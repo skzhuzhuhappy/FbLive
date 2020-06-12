@@ -10,7 +10,7 @@ use Encore\Admin\Tree;
 
 class CategoryController extends AdminController
 {
-    protected $title = 'All categories';
+    protected $title = '小队类型';
 
     /**
      * Index interface.

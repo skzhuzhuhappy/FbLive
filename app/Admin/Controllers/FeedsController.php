@@ -15,7 +15,7 @@ class FeedsController extends AdminController
      *
      * @var string
      */
-    protected $title = 'App\Models\Feeds';
+    protected $title = '动态';
 
     /**
      * Make a grid builder.

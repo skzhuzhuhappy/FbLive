@@ -18,7 +18,7 @@ class GroupsController extends AdminController
      *
      * @var string
      */
-    protected $title = '小队列表';
+    protected $title = '小队';
 
     /**
      * Make a grid builder.
