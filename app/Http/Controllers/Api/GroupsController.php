@@ -214,7 +214,24 @@ class GroupsController extends Controller
             return $this->failed('圈子用户不对应', 402);
         }
         //$group::update($request->all());
-        $save = Groups::where('id', $id)->update($request->all());
+        $res_data = $request->all();
+        $data = array();
+        if(isset($res_data['publish_permission'])){
+            $data['publish_permission'] = $res_data['publish_permission'];
+        }
+        if(isset($res_data['join_permission'])){
+            $data['join_permission'] = $res_data['join_permission'];
+        }
+
+        if(isset($res_data['feed_status'])){
+            $data['feed_status'] = $res_data['feed_status'];
+        }
+
+        if(isset($res_data['visible'])){
+            $data['visible'] = $res_data['visible'];
+        }
+
+        $save = Groups::where('id', $id)->update($data);
         return $this->setStatusCode(201)->success('圈子修改成功');
 
     }
