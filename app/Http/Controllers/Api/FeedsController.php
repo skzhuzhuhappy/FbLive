@@ -159,6 +159,10 @@ class FeedsController extends Controller
     {
         $feed = Feeds::where('id', $id)->first();
         $feed->delete();
+
+        //更新评论数
+        (new Feeds)->updateCommentCount($feed->feed_id,'cut');
+
         return $this->setStatusCode(201)->success('动态评论删除成功');
     }
 

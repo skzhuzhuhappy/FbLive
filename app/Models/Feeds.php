@@ -55,6 +55,7 @@ class Feeds extends Model
     {
         //pid=0 动态 status = 1 有效
         $data['pid'] = 0;
+        $data['status'] = 1;
         if ($num) {
             return self::where($data)->orderBy('hot', 'desc')->latest()->paginate($num);
         } else {
@@ -70,9 +71,14 @@ class Feeds extends Model
         $feed->save();
     }
     //更新 动态评论数
-    public function updateCommentCount($feed_id){
+    public function updateCommentCount($feed_id,$type="add"){
         $feed = Feeds::find($feed_id);
-        $feed->feed_comment_count = $feed->feed_comment_count +1;
+        if($type == "add"){
+            $feed->feed_comment_count = $feed->feed_comment_count + 1;
+        }
+        if($type == "cut"){
+            $feed->feed_comment_count = $feed->feed_comment_count - 1;
+        }
         $feed->save();
     }
 

@@ -11,11 +11,11 @@ class CommonEnum
     public static function getStatusName($status){
         switch ($status){
             case self::INVALID:
-                return '未审核';
+                return '待审核';
             case self::NORMAL:
-                return '通过';
+                return '通过审核';
             case self::FREEZE:
-                return '拒绝';
+                return '未通过审核';
             default:
                 return '正常';
         }

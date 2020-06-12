@@ -73,6 +73,7 @@ class FeedsController extends AdminController
             //$filter->scope('sex', '女')->where('sex', '0');
 
         });
+        $grid->disableCreateButton();
 
         return $grid;
     }

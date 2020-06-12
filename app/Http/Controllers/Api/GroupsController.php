@@ -36,18 +36,46 @@ class GroupsController extends Controller
         return GroupsResource::collection($groups);
     }
 
-    //陆用户创建的所有圈子
-    public function userIndex()
+    //陆用户创建的所有圈子  type=ALL 全部圈子 type=ADD 创建的 type=JOIN 加入的
+    public function userIndex(Request $request)
     {
         $user = Auth::user();
-        $groups = Groups::where(['user_id' => $user->getAuthIdentifier()])->orderBy('status', 'asc')->latest()->get();
+        if(isset($request->type) && $request->type=="ADD"){
+            $where[] = ['user_id'=>$user->getAuthIdentifier()];
+        }elseif(isset($request->type) && $request->type=="JOIN"){
+            $group_member = GroupMembers::where(['user_id'=>$user->getAuthIdentifier()])
+                ->where('user_type','!=',3)->orderBy('audit', 'asc')->latest()->get()->ToArray();
+            $group_id_arr = array_column($group_member,"group_id");
+            $where[] = ['in'=>['id'=>$group_id_arr]];
+        }else{
+            $group_member = GroupMembers::where(['user_id'=>$user->getAuthIdentifier()])
+                ->where('user_type','!=',3)->orderBy('audit', 'asc')->latest()->get()->ToArray();
+            $group_id_arr = array_column($group_member,"group_id");
+            $where[] = ['in'=>['id'=>$group_id_arr]];
+            $where[] = ['user_id'=>$user->getAuthIdentifier()];
+        }
+        $groups = Groups::where($where)->orderBy('status', 'asc')->latest()->get();
         return GroupsResource::collection($groups);
+
     }
 
-    //某个用户下所有圈子
+    //用户加入的圈子列表
+    public function userJoin(){
+
+        $user = Auth::user();
+        $group_member = GroupMembers::where(['user_id'=>$user->getAuthIdentifier()])
+            ->where('user_type','!=',3)->orderBy('audit', 'asc')->latest()->get()->ToArray();
+        $group_id_arr = array_column($group_member,"group_id");
+        $where[] = ['in'=>['id'=>$group_id_arr]];
+        $groups = Groups::where($where)->orderBy('status', 'asc')->latest()->get();
+        //$groups = Groups::find($group_id_arr);
+        return GroupsResource::collection($groups);
+
+    }
+
+    //用户下所有圈子(创建的和加入的)
     public function useridIndex($id)
     {
-
         $groups = Groups::where(['user_id' => $id])->orderBy('status', 'asc')->latest()->get();
         return GroupsResource::collection($groups);
     }

@@ -64,6 +64,9 @@ class UserController extends AdminController
 
         });
 
+        $grid->disableCreateButton();
+
+
         return $grid;
     }
 

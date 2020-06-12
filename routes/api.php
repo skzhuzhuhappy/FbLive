@@ -59,7 +59,7 @@ Route::namespace('Api')->prefix('v1')->group(function () {
         Route::get('/areas/groups', 'GroupsController@areasIndex')->name('groups.areas');
         //圈子下的用户列表
         Route::get('/groups/user/{id}', 'GroupsController@groupuserIndex')->name('groups.user.index');
-        //某个用户下的圈子列表
+        //登陆用户下的圈子列表
         Route::get('/user/groups/{id}', 'GroupsController@useridIndex')->name('userId.groups.index');
 
         //圈子的动态列表
@@ -89,9 +89,12 @@ Route::namespace('Api')->prefix('v1')->group(function () {
 
         //需要登陆认证的接口
         Route::middleware('api.refresh')->group(function () {
-
             //登陆用户创建的所有圈子
             Route::get('/user/groups', 'GroupsController@userIndex')->name('user.groups.index');
+
+            //用户加入的圈子列表
+            Route::get('/groups/join/user', 'GroupsController@userJoin')->name('groups.user.join');
+
             //新建圈子
             Route::post('/groups', 'GroupsController@store')->name('groups.store');
             //更新圈子
