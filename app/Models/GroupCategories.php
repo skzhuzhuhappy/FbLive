@@ -51,7 +51,7 @@ class   GroupCategories extends Model
 
     public function children()
     {
-        return $this->hasMany(GroupCategories::class, 'parent_id','id');
+        return $this->hasMany(GroupCategories::class, 'parent_id', 'id');
     }
 
     /**
@@ -73,8 +73,8 @@ class   GroupCategories extends Model
     public function getAncestorsAttribute()
     {
         return GroupCategories::query()
-            ->whereIn('id', $this->parent_id) // 调用 getPathIdsAttribute 获取祖先类目id
-            ->orderBy('level') // 按层级排列
+            ->whereIn('id', $this->parent_id)// 调用 getPathIdsAttribute 获取祖先类目id
+            ->orderBy('level')// 按层级排列
             ->get();
     }
 
@@ -84,28 +84,44 @@ class   GroupCategories extends Model
      */
     public function getFullNameAttribute()
     {
-        return $this->ancestors // 调用 getAncestorsAttribute 获取祖先类目
-        ->pluck('name') // 将所有祖先类目的 name 字段作为一个数组
-        ->push($this->name) // 追加当前类目的name字段到数组末尾
+        return $this->ancestors// 调用 getAncestorsAttribute 获取祖先类目
+        ->pluck('name')// 将所有祖先类目的 name 字段作为一个数组
+        ->push($this->name)// 追加当前类目的name字段到数组末尾
         ->implode(' - '); // 用 - 符号将数组的值组装成一个字符串
+    }
+
+    /*
+     * 根据id返回 类型
+     * */
+    public static function categoryName($category_id, $res = "")
+    {
+        $category = self::find($category_id);
+        $res = $category->title.",".$res;
+        if ($category->parent_id != 0) {
+            self::categoryName($category->parent_id,$res);
+        }
+       // var_dump($res);exit();
+
+        return $res;
     }
 
     /*
      * 获取 全部父类型
      * */
-    public static function categoryList(){
+    public static function categoryList()
+    {
 
-        return self::where(['parent_id'=>0,'status'=>0])->select('id','name')->get()->toArray();
+        return self::where(['parent_id' => 0, 'status' => 0])->select('id', 'title')->get()->toArray();
     }
 
     /*
    * 获取 pid获取子类型列表
    * */
-    public static  function categoryListParent_id($parent_id){
+    public static function categoryListParent_id($parent_id)
+    {
 
-        return self::where(['parent_id'=>$parent_id,'status'=>0])->get(['id', DB::raw('name as text')]);
+        return self::where(['parent_id' => $parent_id, 'status' => 0])->get(['id', DB::raw('title as text')]);
     }
-
 
 
 }

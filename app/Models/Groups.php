@@ -36,6 +36,7 @@ class Groups extends Model
         'feed_status',
         'visible',
         'status',
+
     ];
 
     public function user()

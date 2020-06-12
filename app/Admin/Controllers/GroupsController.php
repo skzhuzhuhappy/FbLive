@@ -4,6 +4,7 @@ namespace App\Admin\Controllers;
 
 use App\Models\GroupCategories;
 use App\Models\Groups;
+use App\Models\User;
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
@@ -17,7 +18,7 @@ class GroupsController extends AdminController
      *
      * @var string
      */
-    protected $title = 'App\Models\Groups';
+    protected $title = '小队列表';
 
     /**
      * Make a grid builder.
@@ -30,8 +31,15 @@ class GroupsController extends AdminController
 
         $grid->column('id', __('小队id'));
         $grid->column('name', __('小队名称'));
-        $grid->column('user_id', __('创建用户id'));
-        $grid->column('category_id', __('小队类型id'));
+        //$grid->column('user_id', __('创建用户id'));
+        $grid->column('user_id', __('创建用户id'))->display(function($user_id) {
+            $name = User::where('id',$user_id)->value('name');
+
+            return  $name ?  $user_id."=>".$name :$user_id ;
+        });
+        $grid->column('category_id', __('小队类型id'))->display(function($category_id) {
+            return  GroupCategories::categoryName($category_id);
+        });
         //$grid->column('area_id', __('小队地区id'));
         //$grid->column('img_head', __('圈子头像'));
         //$grid->column('img_top', __('圈子顶图'));
@@ -91,6 +99,7 @@ class GroupsController extends AdminController
 
         $show->field('id', __('小队id'));
         $show->field('name', __('小队名称'));
+
         $show->field('user_id', __('创建用户id'));
         $show->field('category_id', __('小队类型id'));
         //$show->field('area_id', __('Area id'));
@@ -133,16 +142,15 @@ class GroupsController extends AdminController
         $form->text('name', __('小队名称1'));
         $form->display('user_id', __('创建用户id'));
         //获得类型列表
-        $category_list = GroupCategories::categoryList();
+        /*$category_list = GroupCategories::categoryList();
         $category = array();
         foreach($category_list as $k=>$v){
-            $category[$v['id']] = $v['name'];
+            $category[$v['id']] = $v['title'];
         }
-        //var_dump(json_encode($category));exit();
+        $form->select('parent_id',__('类型'))->options($category)->load('category_id', '/admin/groups/category');
+        $form->select('category_id');*/
 
-        $form->select('category_id',__('类型'))->options($category)->load('parent_id', '/admin/groups/category');
-        $form->select('parent_id');
-
+        $form->number('category_id', __('类型'));
         //$form->number('area_id', __('Area id'));
         $form->image('img_head', __('圈子头像'));
         $form->image('img_top', __('圈子顶图'));

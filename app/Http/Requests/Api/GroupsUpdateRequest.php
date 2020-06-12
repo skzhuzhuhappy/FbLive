@@ -18,11 +18,11 @@ class GroupsUpdateRequest extends FormRequest
             case 'POST':
                 {
                     return [
-                        'name' => ['required', 'max:12'],
-                        'category_id' => ['required','integer'],
+                        //'name' => ['required', 'max:12'],
+                        //'category_id' => ['required','integer'],
                         //'area_id' => ['required','integer'],
-                        'node' => ['required','Integer','between:1,3'],
-                        'summary' => ['required','string'],
+                        //'node' => ['required','Integer','between:1,3'],
+                        //'summary' => ['required','string'],
 
                         'publish_permission' => ['Integer','between:1,3'],
                         'join_permission' => ['Integer','between:1,2'],

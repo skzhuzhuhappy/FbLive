@@ -18,7 +18,7 @@ class GroupCategoriesResource extends JsonResource
     {
             return [
                 'id'=>$this->id,
-                'name' => $this->name,
+                'name' => $this->title,
                 'parent_id' => $this->parent_id,
                 'is_directory' => $this->is_directory,
                 'level' => $this->level,

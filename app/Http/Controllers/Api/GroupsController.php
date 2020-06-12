@@ -55,8 +55,7 @@ class GroupsController extends Controller
     //圈子类型 列表
     public function categorysIndex()
     {
-
-        $categorys = GroupCategories::where(['status' => 0, 'parent_id' => 0])->orderBy('level', 'asc')->get();
+        $categorys = GroupCategories::where(['status' => 0, 'parent_id' => 0])->orderBy('order', 'desc')->get();
         return GroupCategoriesResource::collection($categorys);
     }
 
