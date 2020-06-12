@@ -40,21 +40,28 @@ class GroupsController extends Controller
     public function userIndex(Request $request)
     {
         $user = Auth::user();
+
         if(isset($request->type) && $request->type=="ADD"){
-            $where[] = ['user_id'=>$user->getAuthIdentifier()];
+            $where['user_id'] = $user->getAuthIdentifier();
+            $groups = Groups::where($where)->orderBy('status', 'asc')->latest()->get();
+
+            //var_dump($request->type);exit();
         }elseif(isset($request->type) && $request->type=="JOIN"){
             $group_member = GroupMembers::where(['user_id'=>$user->getAuthIdentifier()])
                 ->where('user_type','!=',3)->orderBy('audit', 'asc')->latest()->get()->ToArray();
             $group_id_arr = array_column($group_member,"group_id");
             $where[] = ['in'=>['id'=>$group_id_arr]];
+            $groups = Groups::where($where)->orderBy('status', 'asc')->latest()->get();
+
         }else{
             $group_member = GroupMembers::where(['user_id'=>$user->getAuthIdentifier()])
                 ->where('user_type','!=',3)->orderBy('audit', 'asc')->latest()->get()->ToArray();
             $group_id_arr = array_column($group_member,"group_id");
             $where[] = ['in'=>['id'=>$group_id_arr]];
-            $where[] = ['user_id'=>$user->getAuthIdentifier()];
+            $groups = Groups::orWhere('user_id',$user->getAuthIdentifier())->orWhere($where)->orderBy('status', 'asc')->latest()->get();
         }
-        $groups = Groups::where($where)->orderBy('status', 'asc')->latest()->get();
+
+        //$groups = Groups::where($where)->orderBy('status', 'asc')->latest()->get();
         return GroupsResource::collection($groups);
 
     }
