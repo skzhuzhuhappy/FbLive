@@ -74,9 +74,14 @@ class Groups extends Model
         $group->save();
     }
     //更新用户加入数量
-    public function updateUserCount($group_id){
+    public function updateUserCount($group_id,$type="add"){
         $group = Groups::find($group_id);
-        $group->users_count = $group->users_count +1;
+        if($type == "add"){
+            $group->users_count = $group->users_count + 1;
+        }
+        if($type == "cut"){
+            $group->users_count = $group->users_count - 1;
+        }
         $group->save();
     }
 

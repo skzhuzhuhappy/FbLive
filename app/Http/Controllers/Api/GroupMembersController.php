@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Requests\Api\GroupMembersRequest;
 use App\Models\GroupMembers;
+use App\Models\Groups;
 use App\Models\User;
 use App\Transformers\PostTransformer;
 use Illuminate\Support\Facades\Auth;
@@ -40,6 +41,8 @@ class GroupMembersController extends Controller
         $flight = GroupMembers::find($id);
         if ($flight) {
             $flight->delete();
+            //更新圈子加入人数
+            (new Groups())->updateUserCount($id,"cut");
             return $this->setStatusCode(201)->success('移除成功');
         } else {
             return $this->failed('未查到数据', 402);
@@ -70,7 +73,6 @@ class GroupMembersController extends Controller
         if ($request->user_id) {
             $res = (new GroupMembers())->join_group($request->group_id, $request->user_id);
         }
-
 
         if ($res['type'] == 'failed') {
             return $this->failed('该用户已经加入该圈子', 402);

@@ -300,6 +300,9 @@ class GroupsController extends Controller
             return $this->failed('用户不在这个圈子', 402);
         }
         $groupMember->delete();
+        //更新圈子加入人数
+        (new Groups())->updateUserCount($id,"cut");
+
         return $this->setStatusCode(201)->success('用户退出圈子成功');
 
     }
